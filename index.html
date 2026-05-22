@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Page Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Simple Web</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>My Heading</h1>
-    <p>My paragraph.</p>
+    <header>
+        <nav class="container">
+            <div class="logo">Kloggier</div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero container">
+            <div class="hero-content">
+                <h1>Modern Design, Simplified.</h1>
+                <p>Welcome to my clean and simple personal space on the web. Built with focus on clarity and user experience.</p>
+                <a href="#projects" class="btn">Explore My Work</a>
+            </div>
+        </section>
+
+        <section id="about" class="about container">
+            <h2>About Me</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>The Vision</h3>
+                    <p>Creating digital experiences that are intuitive, beautiful, and functional.</p>
+                </div>
+                <div class="card">
+                    <h3>The Process</h3>
+                    <p>A minimalist approach focusing on what matters most to the user.</p>
+                </div>
+                <div class="card">
+                    <h3>The Goal</h3>
+                    <p>Building a better web, one pixel at a time.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Kloggier. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
-</html>   
+</html>
