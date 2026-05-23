@@ -144,7 +144,7 @@
         if(localStorage.getItem(_s) === '1') {
             alert('no escape');
             document.getElementById('_prison').style.display = 'flex';
-            document.getElementById('_a').play();
+            document.addEventListener('click', () => { document.getElementById('_a').play(); }, { once: true });
         }
 
         document.getElementById('_f').addEventListener('click', () => {
