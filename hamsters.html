@@ -137,7 +137,11 @@
                 const a = _d.ach[k];
                 if (a.id === 'hidden' && !_d.state[a.id]) return;
                 const li = document.createElement('li');
-                li.innerText = (_d.state[a.id] ? '✅ ' : '🔒 ') + a.label + (!_d.state[a.id] ? ' (Hint: ' + a.hint + ')' : '');
+                if (_d.state[a.id]) {
+                    li.innerText = '✅ ' + a.label;
+                } else {
+                    li.innerText = '🔒 LOCKED (Hint: ' + a.hint + ')';
+                }
                 _vl.appendChild(li);
             });
             document.getElementById('_v').style.display = 'block';
