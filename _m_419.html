@@ -20,16 +20,19 @@
     <div class="item">
         <p>Site Creator Access (100 coins)</p>
         <button onclick="buy('creator')">Buy</button>
+        <button id="_cBtn" style="display:none; background:green;" onclick="window.location.href='_c_721.html'">Enter Creator</button>
     </div>
     <a href="hamsters.html" style="color:white;">Return to safety</a>
 
     <script>
         document.getElementById('_coins').innerText = getVaultData().coins;
+        if(getVaultData().state['creator_access']) document.getElementById('_cBtn').style.display = 'inline-block';
+        
         function buy(item) {
-            let c = getVaultData().coins;
+            let k = getVaultData();
             let cost = item === 'filter' ? 20 : 100;
-            if (c >= cost) {
-                localStorage.setItem('_c', (c - cost).toString());
+            if (k.coins >= cost) {
+                localStorage.setItem('_c', (k.coins - cost).toString());
                 if (item === 'creator') unlock('creator_access');
                 alert("Purchased " + item);
                 location.reload();
