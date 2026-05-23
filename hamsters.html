@@ -94,10 +94,8 @@
             <input type="text" id="searchInput" placeholder="Search for something...">
             <button onclick="evilSearch()">EVIL SEARCH</button>
             <div id="results" class="results" style="text-align: center; font-size: 2rem; margin-top: 1rem; color: #ef4444; min-height: 3rem;"></div>
-            <div id="_v" style="display:none; margin-top:2rem; text-align:left; max-width:400px; margin-left:auto; margin-right:auto; border:1px solid #ef4444; padding:1rem; color:white;">
-                <h3 style="color:#ef4444;">THE VAULT</h3>
-                <ul id="_vl"></ul>
-            </div>
+            <!-- #include file="vault.html" -->
+            <div id="_v_container"></div>
         </div>
         <a href="index.html" class="back-link">&larr; Escape back to safety</a>
         
@@ -164,12 +162,22 @@
             if (!_) return;
             let _k = JSON.parse(localStorage.getItem('_v') || '{"e1":0,"e2":0,"e3":0,"e4":0,"e5":0,"h1":0,"h2":0,"h3":0,"hidden":0}');
             const _h = {
-                'e1': 'Search "doge"', 'e2': 'Search "they are watching you"', 'e3': 'Search "..."',
-                'e4': 'Search "slaughterhouse"', 'e5': 'Search "bloodlust"',
-                'h1': 'Click the footer', 'h2': 'Find the invisible link', 'h3': 'Search something very fast'
+                'e1': 'Man\'s best friend, but inverted', 'e2': 'The gaze that persists', 'e3': '...',
+                'e4': 'The factory of meat', 'e5': 'The bloodline',
+                'h1': 'Look to the footer', 'h2': 'Find the 1px ghost', 'h3': 'Speed is key'
             };
             
             if (_ === 'the vault') {
+                if(!document.getElementById('_v')) {
+                    fetch('vault.html').then(r=>r.text()).then(t=>{
+                        document.getElementById('_v_container').innerHTML = t;
+                        showVault(_k);
+                    });
+                } else showVault(_k);
+                document.getElementById('searchInput').value = "";
+                return;
+            }
+            function showVault(_k) {
                 const _vl = document.getElementById('_vl');
                 _vl.innerHTML = '';
                 Object.keys(_k).forEach(k => {
@@ -179,8 +187,6 @@
                     _vl.appendChild(li);
                 });
                 document.getElementById('_v').style.display = 'block';
-                document.getElementById('searchInput').value = "";
-                return;
             }
             
             // ... (rest of logic mapping commands to _k update and state checks)
