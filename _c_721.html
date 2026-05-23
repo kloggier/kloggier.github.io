@@ -8,12 +8,12 @@
         :root { --bg: #1e1e1e; --side: #252526; --accent: #007acc; --text: #cccccc; --border: #333; }
         body { margin: 0; display: flex; height: 100vh; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
         .pane { display: flex; flex-direction: column; border-right: 1px solid var(--border); height: 100%; box-sizing: border-box; }
-        #palette { width: 180px; background: var(--side); }
-        #workspace { width: 200px; background: var(--bg); padding: 10px; }
+        #palette { width: 200px; background: var(--side); }
+        #workspace { width: 220px; background: var(--bg); padding: 10px; }
         #sidebar { width: 280px; background: var(--side); padding: 10px; border-left: 1px solid var(--border); overflow-y: auto; }
-        #stage { flex-grow: 1; background: #eee; position: relative; }
+        #stage { flex-grow: 1; background: #333; position: relative; display: flex; flex-direction: column; }
         .tabs { display: flex; background: #333; flex-wrap: wrap; }
-        .tab { flex: 1; min-width: 45px; padding: 5px; font-size: 9px; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab { flex: 1; min-width: 40px; padding: 6px; font-size: 9px; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; }
         .tab.active { border-color: var(--accent); background: var(--bg); }
         .section-title { font-size: 10px; font-weight: bold; text-transform: uppercase; margin: 10px 0; color: #888; }
         .block-item { background: #333; padding: 6px; margin-bottom: 4px; cursor: pointer; border-radius: 3px; font-size: 11px; border: 1px solid transparent; }
@@ -23,51 +23,48 @@
         .prop-group { margin-bottom: 12px; }
         .prop-group label { display: block; font-size: 10px; margin-bottom: 3px; color: #aaa; }
         .prop-group input, .prop-group textarea, .prop-group select { width: 100%; background: #3c3c3c; border: 1px solid #555; color: #fff; padding: 4px; border-radius: 2px; font-size: 11px; box-sizing: border-box; }
-        iframe { width: 100%; height: 100%; border: none; background: white; }
+        iframe { flex-grow: 1; border: none; background: white; width: 100%; height: 100%; }
         .btn-main { background: var(--accent); color: white; border: none; padding: 8px; border-radius: 2px; cursor: pointer; margin-top: 5px; width: 100%; font-size: 11px; }
         .hidden { display: none; }
+        .toolbar { background: #333; padding: 5px; display: flex; gap: 5px; border-bottom: 1px solid #444; }
     </style>
 </head>
 <body>
     <div id="palette" class="pane">
         <div class="tabs">
             <div class="tab active" onclick="switchTab('html')">HTML</div>
-            <div class="tab" onclick="switchTab('css')">CSS</div>
-            <div class="tab" onclick="switchTab('js')">JS</div>
             <div class="tab" onclick="switchTab('logic')">LOGIC</div>
             <div class="tab" onclick="switchTab('math')">MATH</div>
+            <div class="tab" onclick="switchTab('func')">FUNC</div>
         </div>
         <div id="p-html" class="p-content" style="padding:10px;">
-            <div class="block-item" onclick="add('text')">Text Label</div>
+            <div class="block-item" onclick="add('text')">Text Box</div>
             <div class="block-item" onclick="add('button')">Button</div>
-            <div class="block-item" onclick="add('image')">Image Box</div>
-        </div>
-        <div id="p-css" class="p-content hidden" style="padding:10px;">
-            <div class="block-item" onclick="add('style')">Raw CSS</div>
-            <div class="block-item" onclick="add('glow')">Glow Effect</div>
-        </div>
-        <div id="p-js" class="p-content hidden" style="padding:10px;">
-            <div class="block-item" onclick="add('script')">Custom JS</div>
-            <div class="block-item" onclick="add('alert')">Alert Pop</div>
+            <div class="block-item" onclick="add('image')">Image</div>
         </div>
         <div id="p-logic" class="p-content hidden" style="padding:10px;">
-            <div class="block-item" onclick="add('if')">Condition</div>
-            <div class="block-item" onclick="add('redirect')">Go to URL</div>
+            <div class="block-item" onclick="add('if')">If Condition</div>
+            <div class="block-item" onclick="add('set')">Change Prop</div>
+            <div class="block-item" onclick="add('alert')">Alert</div>
         </div>
         <div id="p-math" class="p-content hidden" style="padding:10px;">
-            <div class="block-item" onclick="add('var')">New Var</div>
-            <div class="block-item" onclick="add('calc')">Arithmetic</div>
+            <div class="block-item" onclick="add('var')">Variable</div>
+            <div class="block-item" onclick="add('calc')">Calculate</div>
+        </div>
+        <div id="p-func" class="p-content hidden" style="padding:10px;">
+            <div class="block-item" onclick="add('define')">Define Func</div>
+            <div class="block-item" onclick="add('call')">Call Func</div>
         </div>
         <div style="margin-top:auto; padding:10px;">
             <button class="btn-main" onclick="showSettings()">Global Styles</button>
-            <button class="btn-main" style="background:#10b981;" onclick="updatePreview(true)">RUN (Ctrl+Enter)</button>
         </div>
     </div>
     
     <div id="workspace" class="pane">
-        <div class="section-title">Workflow</div>
+        <div class="section-title">Block Stack</div>
         <div id="stack"></div>
         <div style="margin-top:auto;">
+            <button class="btn-main" style="background:#10b981;" onclick="updatePreview(true)">RUN SITE</button>
             <button class="btn-main" onclick="publish()">EXPORT</button>
             <button class="btn-main" style="background:#444;" onclick="clearAll()">WIPE</button>
         </div>
@@ -76,16 +73,19 @@
     <div id="sidebar" class="pane">
         <div id="props">
             <div class="section-title">Properties</div>
-            <p style="font-size:11px; color:#666;">Select an element</p>
+            <p style="font-size:11px; color:#666;">Select a block</p>
         </div>
     </div>
 
     <div id="stage" class="pane">
+        <div class="toolbar">
+            <span style="font-size:10px; color:#aaa;">LIVE PREVIEW (Drag to position)</span>
+        </div>
         <iframe id="preview"></iframe>
     </div>
 
     <script>
-        let _s = JSON.parse(localStorage.getItem('_sp_v6') || '[]');
+        let _s = JSON.parse(localStorage.getItem('_sp_v7') || '[]');
         let _gl = JSON.parse(localStorage.getItem('_sp_gl') || '{"bg":"#ffffff","font":"sans-serif"}');
         let _sel = null;
 
@@ -110,14 +110,18 @@
 
         function add(type) {
             const id = 'id_' + Math.random().toString(36).substr(2, 9);
-            const props = { val: 'New ' + type, x: 20, y: 20, opacity: 1, size: '16px', glow: 0, hCol: '', hScale: 1, extra: '', url: '' };
+            const props = { val: 'New ' + type, x: 20, y: 20, opacity: 1, size: '16px', glow: 0, hCol: '', hScale: 1, extra: '', url: '', event: '', target: '', prop: 'opacity' };
+            if(type === 'if') props.val = '1 === 1';
+            if(type === 'calc') props.val = 'x = 10 + 5';
+            if(type === 'define') props.val = 'myFunction';
+            if(type === 'call') props.val = 'myFunction';
             _s.push({ id, type, props });
             _sel = id;
             save(); render();
         }
 
         function save(refresh = true) { 
-            localStorage.setItem('_sp_v6', JSON.stringify(_s)); 
+            localStorage.setItem('_sp_v7', JSON.stringify(_s)); 
             localStorage.setItem('_sp_gl', JSON.stringify(_gl));
             if(refresh) updatePreview(false);
             else updateStylesOnly();
@@ -130,7 +134,7 @@
                 const el = document.createElement('div');
                 el.className = 'stack-item' + (b.id === _sel ? ' active' : '');
                 el.dataset.id = b.id;
-                el.innerHTML = `<span>${b.type.toUpperCase()}</span>
+                el.innerHTML = `<span>${b.type.toUpperCase()}: ${b.props.val.substring(0,8)}</span>
                                 <button onclick="del('${b.id}')" style="background:none; border:none; color:red; cursor:pointer;">✕</button>`;
                 el.onclick = (e) => { if(e.target.tagName !== 'BUTTON') select(b.id); };
                 stack.appendChild(el);
@@ -147,21 +151,21 @@
             const b = _s.find(x => x.id === _sel);
             if(!b) { panel.innerHTML = '<div class="section-title">Properties</div>'; return; }
             
-            let html = `<div class="section-title">Edit ${b.type}</div>`;
+            let html = `<div class="section-title">Config ${b.type} [ID: ${b.id}]</div>`;
             html += `<div class="prop-group"><label>Value/Content</label><textarea oninput="up('val', this.value)">${b.props.val}</textarea></div>`;
             
-            if(['text', 'button', 'image', 'redirect'].includes(b.type)) {
-                html += `<div class="prop-group"><label>URL / Target Path</label><input value="${b.props.url}" placeholder="e.g. /home or https://..." oninput="up('url', this.value)"></div>`;
-                html += `<div class="prop-group"><label>Position (X/Y)</label>
-                    <div style="display:flex; gap:5px;"><input type="number" value="${b.props.x}" oninput="up('x', this.value)"><input type="number" value="${b.props.y}" oninput="up('y', this.value)"></div>
-                </div>`;
-                html += `<div class="prop-group"><label>Visuals (Size/Opacity/Glow)</label>
-                    <div style="display:flex; gap:5px;"><input value="${b.props.size}" oninput="up('size', this.value)"><input type="number" step="0.1" value="${b.props.opacity}" oninput="up('opacity', this.value)"><input type="number" value="${b.props.glow}" oninput="up('glow', this.value)"></div>
-                </div>`;
-                html += `<div class="prop-group"><label>Hover (Color/Scale)</label>
-                    <div style="display:flex; gap:5px;"><input type="color" value="${b.props.hCol || '#ffffff'}" oninput="up('hCol', this.value)"><input type="number" step="0.1" value="${b.props.hScale}" oninput="up('hScale', this.value)"></div>
-                </div>`;
+            if(['text', 'button', 'image'].includes(b.type)) {
+                html += `<div class="prop-group"><label>On Click (Call Function)</label><input value="${b.props.event}" placeholder="e.g. myFunction" oninput="up('event', this.value)"></div>`;
+                html += `<div class="prop-group"><label>Position (X/Y)</label><div style="display:flex; gap:5px;"><input type="number" value="${b.props.x}" oninput="up('x', this.value)"><input type="number" value="${b.props.y}" oninput="up('y', this.value)"></div></div>`;
+                html += `<div class="prop-group"><label>Styles (Size/Opacity/Glow)</label><div style="display:flex; gap:5px;"><input value="${b.props.size}" oninput="up('size', this.value)"><input type="number" step="0.1" value="${b.props.opacity}" oninput="up('opacity', this.value)"><input type="number" value="${b.props.glow}" oninput="up('glow', this.value)"></div></div>`;
+                html += `<div class="prop-group"><label>Hover (Color/Scale)</label><div style="display:flex; gap:5px;"><input type="color" value="${b.props.hCol || '#ffffff'}" oninput="up('hCol', this.value)"><input type="number" step="0.1" value="${b.props.hScale}" oninput="up('hScale', this.value)"></div></div>`;
             }
+            
+            if(b.type === 'set') {
+                html += `<div class="prop-group"><label>Target Element ID</label><input value="${b.props.target}" oninput="up('target', this.value)"></div>`;
+                html += `<div class="prop-group"><label>Property</label><select onchange="up('prop', this.value)"><option value="opacity" ${b.props.prop==='opacity'?'selected':''}>Opacity</option><option value="display" ${b.props.prop==='display'?'selected':''}>Visibility</option><option value="color" ${b.props.prop==='color'?'selected':''}>Color</option></select></div>`;
+            }
+            
             html += `<div class="prop-group"><label>Expert Override</label><textarea oninput="up('extra', this.value)">${b.props.extra}</textarea></div>`;
             panel.innerHTML = html;
         }
@@ -174,31 +178,35 @@
                 <div class="prop-group"><label>Default Font</label><input value="${_gl.font}" oninput="_gl.font=this.value;save()"></div>`;
         }
 
-        function up(key, val) { const b = _s.find(x => x.id === _sel); if(b) b.props[key] = val; save(key==='val'||key==='url'); }
+        function up(key, val) { const b = _s.find(x => x.id === _sel); if(b) b.props[key] = val; save(key==='val'||key==='event'||key==='target'); }
 
         function generateAssets(isExport) {
             let css = `body { background: ${_gl.bg}; font-family: ${_gl.font}; margin: 0; min-height: 100vh; position: relative; overflow: hidden; }
-                       .obj { position: absolute; cursor: ${isExport?'default':'move'}; user-select: none; transition: transform 0.2s, text-shadow 0.2s; white-space: nowrap; }`;
+                       .obj { position: absolute; cursor: ${isExport?'default':'move'}; user-select: none; transition: all 0.3s; white-space: nowrap; }`;
             let html = '';
-            let js = 'try {';
+            let js = 'window._vars = {}; try {';
             
             _s.forEach(b => {
                 const p = b.props;
                 css += `#${b.id} { top:${p.y}px; left:${p.x}px; opacity:${p.opacity}; font-size:${p.size}; text-shadow: 0 0 ${p.glow}px currentColor; ${p.extra} }`;
                 if(p.hCol || p.hScale !== 1) css += `#${b.id}:hover { color:${p.hCol} !important; transform: scale(${p.hScale}); }`;
 
-                if(b.type === 'text') html += `<div id="${b.id}" class="obj">${p.val}</div>`;
-                if(b.type === 'button') html += `<button id="${b.id}" class="obj" onclick="location.href='${p.url}'">${p.val}</button>`;
-                if(b.type === 'image') html += `<img id="${b.id}" src="${p.val}" class="obj" style="width:100px;" onclick="${p.url?`location.href='${p.url}'`:''}">`;
+                if(b.type === 'text') html += `<div id="${b.id}" class="obj" onclick="${p.event?`${p.event}()`:''}">${p.val}</div>`;
+                if(b.type === 'button') html += `<button id="${b.id}" class="obj" onclick="${p.event?`${p.event}()`:''}">${p.val}</button>`;
+                if(b.type === 'image') html += `<img id="${b.id}" src="${p.val}" class="obj" style="width:100px;" onclick="${p.event?`${p.event}()`:''}">`;
                 
-                if(b.type === 'var') js += `var ${p.val};`;
+                if(b.type === 'define') js += `window.${p.val} = function() {`;
+                if(b.type === 'call') js += `${p.val}();`;
+                if(b.type === 'var') js += `_vars["${p.val}"] = 0;`;
                 if(b.type === 'calc') js += `${p.val};`;
                 if(b.type === 'if') js += `if(${p.val}) {`;
                 if(b.type === 'alert') js += `alert("${p.val}");`;
-                if(b.type === 'redirect') js += `location.href="${p.url}";`;
-                if(b.type === 'script') js += p.val + ';';
+                if(b.type === 'set') js += `const t = document.getElementById("${p.target}"); if(t) t.style.${p.prop} = "${p.val}";`;
             });
-            _s.filter(b => b.type === 'if').forEach(() => js += '}');
+            
+            // Auto-close brackets for If and Define
+            const openBrackets = _s.filter(b => b.type === 'if' || b.type === 'define').length;
+            for(let i=0; i<openBrackets; i++) js += '}';
             js += '} catch(e) { console.error(e) }';
             
             const dragScript = isExport ? '' : `
@@ -226,8 +234,9 @@
         function updatePreview(runScripts = false) {
             const assets = generateAssets(false);
             const iframe = document.getElementById('preview');
-            const doc = `<html><head><style id="_s">${assets.css}</style></head><body>${assets.html}<script>${runScripts?assets.js:''}<\/script><script>${assets.dragScript}<\/script></body></html>`;
-            iframe.srcdoc = doc;
+            // Flash mitigation: Only update if content changed or if RUN requested
+            const newDoc = `<html><head><style id="_s">${assets.css}</style></head><body>${assets.html}<script>${runScripts?assets.js:''}<\/script><script>${assets.dragScript}<\/script></body></html>`;
+            if (iframe.srcdoc !== newDoc) iframe.srcdoc = newDoc;
         }
 
         function updateStylesOnly() {
@@ -247,16 +256,11 @@
             }
         });
 
-        document.addEventListener('keydown', e => {
-            if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); updatePreview(true); }
-            if (e.ctrlKey && e.key === 's') { e.preventDefault(); save(); alert('Saved!'); }
-        });
-
         function publish() {
             const assets = generateAssets(true);
-            const fullHtml = `<html><head><title>My Creation</title><style>${assets.css}</style></head><body>${assets.html}<script>${assets.js}<\/script></body></html>`;
+            const fullHtml = `<html><head><title>My Site</title><style>${assets.css}</style></head><body>${assets.html}<script>${assets.js}<\/script></body></html>`;
             const blob = new Blob([fullHtml], {type: 'text/html'});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'site.html'; a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'published.html'; a.click();
         }
 
         render(); updatePreview(false);
