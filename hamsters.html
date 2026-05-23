@@ -76,7 +76,7 @@
             <div class="logo" style="color: #ef4444;">Kloggier</div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="https://github.com/kloggier" target="_blank">Projects</a></li>
+                <li><a href="javascript:void(0)" onclick="openMarket()">Projects</a></li>
                 <li>
                     <button id="themeToggle" class="theme-toggle">
                         <span id="themeIcon">🌙</span>
@@ -139,6 +139,7 @@
         <audio id="_a" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
     </div>
 
+    <script src="achievements.js"></script>
     <script>
         const _s = '_p';
         if(window.location.href.includes('theyshallgoon')) localStorage.removeItem(_s);
@@ -155,6 +156,16 @@
                 location.reload();
             }
         });
+
+        function openMarket() {
+            let k = JSON.parse(localStorage.getItem('_v') || '{}');
+            if (k['h4'] && k['h5']) {
+                unlock('black_market');
+                window.location.href = '_m_419.html';
+            } else {
+                window.open('https://github.com/kloggier', '_blank');
+            }
+        }
 
         let isIpodBackground = false;
         function evilSearch() {
