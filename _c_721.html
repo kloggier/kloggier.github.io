@@ -3,58 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <title>SITE CREATOR PRO</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
-        :root { --bg: #1e1e1e; --side: #252526; --accent: #007acc; --text: #cccccc; }
+        :root { --bg: #1e1e1e; --side: #252526; --accent: #007acc; --text: #cccccc; --border: #333; }
         body { margin: 0; display: flex; height: 100vh; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
-        .pane { display: flex; flex-direction: column; border-right: 1px solid #333; }
-        #palette { width: 200px; background: var(--side); }
-        #workspace { flex-grow: 1; background: var(--bg); padding: 20px; overflow-y: auto; position: relative; }
-        #sidebar { width: 250px; background: var(--side); padding: 15px; border-left: 1px solid #333; }
-        #stage { width: 400px; background: #fff; border-left: 5px solid #444; }
+        .pane { display: flex; flex-direction: column; border-right: 1px solid var(--border); height: 100%; box-sizing: border-box; }
         
-        .section-title { font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; color: #888; }
-        .block-item { background: #333; padding: 8px; margin-bottom: 5px; cursor: pointer; border-radius: 3px; font-size: 13px; transition: background 0.2s; border: 1px solid transparent; }
+        #palette { width: 180px; background: var(--side); }
+        #workspace { width: 220px; background: var(--bg); padding: 10px; }
+        #sidebar { width: 220px; background: var(--side); padding: 10px; border-left: 1px solid var(--border); }
+        #stage { flex-grow: 1; background: white; position: relative; }
+        
+        .tabs { display: flex; background: #333; }
+        .tab { flex: 1; padding: 5px; font-size: 10px; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab.active { border-color: var(--accent); background: var(--bg); }
+        
+        .section-title { font-size: 10px; font-weight: bold; text-transform: uppercase; margin: 10px 0; color: #888; }
+        .block-item { background: #333; padding: 6px; margin-bottom: 4px; cursor: pointer; border-radius: 3px; font-size: 11px; border: 1px solid transparent; }
         .block-item:hover { background: #444; border-color: var(--accent); }
         
-        .stack-item { background: #2d2d2d; padding: 10px; margin-bottom: 8px; border-left: 4px solid var(--accent); border-radius: 0 4px 4px 0; cursor: move; display: flex; justify-content: space-between; align-items: center; }
+        .stack-item { background: #2d2d2d; padding: 8px; margin-bottom: 4px; border-left: 3px solid var(--accent); border-radius: 0 3px 3px 0; cursor: grab; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
         .stack-item.active { background: #37373d; outline: 1px solid var(--accent); }
         
-        .prop-group { margin-bottom: 15px; }
-        .prop-group label { display: block; font-size: 11px; margin-bottom: 4px; }
-        .prop-group input, .prop-group textarea, .prop-group select { width: 100%; background: #3c3c3c; border: 1px solid #555; color: #fff; padding: 4px; border-radius: 2px; }
+        .prop-group { margin-bottom: 10px; }
+        .prop-group label { display: block; font-size: 10px; margin-bottom: 2px; color: #aaa; }
+        .prop-group input, .prop-group textarea, .prop-group select { width: 100%; background: #3c3c3c; border: 1px solid #555; color: #fff; padding: 3px; border-radius: 2px; font-size: 11px; }
         
         iframe { width: 100%; height: 100%; border: none; }
-        .btn-main { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; margin-top: 10px; width: 100%; }
-        .btn-main:hover { opacity: 0.9; }
+        .btn-main { background: var(--accent); color: white; border: none; padding: 6px; border-radius: 2px; cursor: pointer; margin-top: 5px; width: 100%; font-size: 11px; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <div id="palette" class="pane">
-        <div style="padding:15px;">
-            <div class="section-title">Components</div>
-            <div class="block-item" onclick="add('text')">Text Label</div>
-            <div class="block-item" onclick="add('button')">Action Button</div>
-            <div class="block-item" onclick="add('image')">Image Frame</div>
-            <div class="block-item" onclick="add('link')">Navigation Link</div>
-            <div class="section-title">Effects</div>
-            <div class="block-item" onclick="add('glow')">Neon Glow</div>
-            <div class="block-item" onclick="add('glitch')">Glitch Script</div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('html')">HTML</div>
+            <div class="tab" onclick="switchTab('css')">CSS</div>
+            <div class="tab" onclick="switchTab('js')">JS</div>
+        </div>
+        <div id="p-html" class="p-content" style="padding:10px;">
+            <div class="block-item" onclick="add('text')">Text</div>
+            <div class="block-item" onclick="add('button')">Button</div>
+            <div class="block-item" onclick="add('image')">Image</div>
+        </div>
+        <div id="p-css" class="p-content hidden" style="padding:10px;">
+            <div class="block-item" onclick="add('glow')">Glow Effect</div>
+            <div class="block-item" onclick="add('border')">Border</div>
+        </div>
+        <div id="p-js" class="p-content hidden" style="padding:10px;">
+            <div class="block-item" onclick="add('alert')">Alert</div>
+            <div class="block-item" onclick="add('redirect')">Redirect</div>
+        </div>
+        <div style="margin-top:auto; padding:10px;">
+            <button class="btn-main" onclick="showSettings()">Global Settings</button>
         </div>
     </div>
     
     <div id="workspace" class="pane">
-        <div class="section-title">Workspace Stack</div>
+        <div class="section-title">Block Stack</div>
         <div id="stack"></div>
         <div style="margin-top:auto;">
-            <button class="btn-main" onclick="publish()">PUBLISH SITE</button>
-            <button class="btn-main" style="background:#444;" onclick="clearAll()">Reset All</button>
+            <button class="btn-main" onclick="publish()">PUBLISH</button>
+            <button class="btn-main" style="background:#444;" onclick="clearAll()">RESET</button>
         </div>
     </div>
 
     <div id="sidebar" class="pane">
         <div id="props">
             <div class="section-title">Properties</div>
-            <p style="font-size:12px; color:#666;">Select a block to edit</p>
         </div>
     </div>
 
@@ -63,35 +79,39 @@
     </div>
 
     <script>
-        let _s = JSON.parse(localStorage.getItem('_sp') || '[]');
+        let _s = JSON.parse(localStorage.getItem('_sp_v2') || '[]');
+        let _gl = JSON.parse(localStorage.getItem('_sp_gl') || '{"bg":"#ffffff","font":"sans-serif"}');
         let _sel = null;
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.p-content').forEach(el => el.classList.add('hidden'));
+            event.target.classList.add('active');
+            document.getElementById('p-' + t).classList.remove('hidden');
+        }
 
         function add(type) {
             const id = 'id_' + Math.random().toString(36).substr(2, 9);
-            const b = { id, type, props: { text: 'New ' + type, css: '', color: '#ffffff', bg: 'transparent', url: '#' } };
-            if(type === 'glow') b.props.css = 'text-shadow: 0 0 10px cyan;';
-            if(type === 'glitch') b.props.css = 'animation: glitch 1s infinite;';
-            _s.push(b);
+            _s.push({ id, type, props: { val: 'New ' + type, extra: '' } });
             _sel = id;
             save(); render();
         }
 
-        function save() { localStorage.setItem('_sp', JSON.stringify(_s)); updatePreview(); }
-        function clearAll() { _s = []; _sel = null; save(); render(); }
+        function save() { 
+            localStorage.setItem('_sp_v2', JSON.stringify(_s)); 
+            localStorage.setItem('_sp_gl', JSON.stringify(_gl));
+            updatePreview(); 
+        }
 
         function render() {
             const stack = document.getElementById('stack');
             stack.innerHTML = '';
-            _s.forEach((b, index) => {
+            _s.forEach((b, i) => {
                 const el = document.createElement('div');
                 el.className = 'stack-item' + (b.id === _sel ? ' active' : '');
-                el.innerHTML = `<span>${b.type.toUpperCase()}: ${b.props.text.substring(0, 15)}</span>
-                                <div style="display:flex; gap:5px;">
-                                    <button onclick="move(${index}, -1)" style="font-size:10px;">↑</button>
-                                    <button onclick="move(${index}, 1)" style="font-size:10px;">↓</button>
-                                    <button onclick="select('${b.id}')" style="font-size:10px;">✎</button>
-                                    <button onclick="del('${b.id}')" style="font-size:10px; color:red;">✕</button>
-                                </div>`;
+                el.dataset.id = b.id;
+                el.innerHTML = `<span>${b.type.toUpperCase()}</span>
+                                <button onclick="del('${b.id}')" style="background:none; border:none; color:red; cursor:pointer;">✕</button>`;
                 el.onclick = (e) => { if(e.target.tagName !== 'BUTTON') select(b.id); };
                 stack.appendChild(el);
             });
@@ -100,57 +120,56 @@
 
         function select(id) { _sel = id; render(); }
         function del(id) { _s = _s.filter(b => b.id !== id); if(_sel === id) _sel = null; save(); render(); }
-        function move(idx, dir) {
-            if(idx + dir < 0 || idx + dir >= _s.length) return;
-            const temp = _s[idx];
-            _s[idx] = _s[idx + dir];
-            _s[idx + dir] = temp;
-            save(); render();
-        }
+        function clearAll() { _s = []; _sel = null; save(); render(); }
 
         function renderProps() {
             const panel = document.getElementById('props');
             const b = _s.find(x => x.id === _sel);
-            if(!b) { panel.innerHTML = '<div class="section-title">Properties</div><p style="font-size:12px; color:#666;">Select a block</p>'; return; }
-            panel.innerHTML = `<div class="section-title">Editing: ${b.type}</div>
-                <div class="prop-group"><label>Content/Text</label><input value="${b.props.text}" oninput="up('text', this.value)"></div>
-                <div class="prop-group"><label>URL/Link</label><input value="${b.props.url}" oninput="up('url', this.value)"></div>
-                <div class="prop-group"><label>Text Color</label><input type="color" value="${b.props.color}" oninput="up('color', this.value)"></div>
-                <div class="prop-group"><label>Background</label><input type="color" value="${b.props.bg}" oninput="up('bg', this.value)"></div>
-                <div class="prop-group"><label>Custom CSS</label><textarea oninput="up('css', this.value)">${b.props.css}</textarea></div>`;
+            if(!b) { panel.innerHTML = '<div class="section-title">Properties</div>'; return; }
+            panel.innerHTML = `<div class="section-title">Edit: ${b.type}</div>
+                <div class="prop-group"><label>Value</label><input value="${b.props.val}" oninput="up('val', this.value)"></div>
+                <div class="prop-group"><label>Styles/Logic</label><textarea oninput="up('extra', this.value)">${b.props.extra}</textarea></div>`;
         }
 
-        function up(key, val) {
-            const b = _s.find(x => x.id === _sel);
-            if(b) b.props[key] = val;
-            save();
+        function showSettings() {
+            _sel = 'global';
+            const panel = document.getElementById('props');
+            panel.innerHTML = `<div class="section-title">Global Settings</div>
+                <div class="prop-group"><label>Site Background</label><input type="color" value="${_gl.bg}" oninput="_gl.bg=this.value;save()"></div>
+                <div class="prop-group"><label>Default Font</label><input value="${_gl.font}" oninput="_gl.font=this.value;save()"></div>`;
         }
+
+        function up(key, val) { const b = _s.find(x => x.id === _sel); if(b) b.props[key] = val; save(); }
 
         function updatePreview() {
             const iframe = document.getElementById('preview');
-            let css = `body { font-family: sans-serif; padding: 20px; transition: all 0.3s; }
-                       .btn { display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 5px; transition: 0.2s; }
-                       @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }`;
+            let css = `body { background: ${_gl.bg}; font-family: ${_gl.font}; padding: 20px; }`;
             let html = '';
             _s.forEach(b => {
                 const p = b.props;
-                const style = `color: ${p.color}; background: ${p.bg}; ${p.css}`;
-                if(b.type === 'text') html += `<div style="${style}">${p.text}</div>`;
-                if(b.type === 'button') html += `<button style="${style}" onclick="location.href='${p.url}'">${p.text}</button>`;
-                if(b.type === 'image') html += `<img src="${p.url}" style="width:100%; border-radius:8px; ${p.css}" alt="${p.text}">`;
-                if(b.type === 'link') html += `<a href="${p.url}" style="${style}">${p.text}</a><br>`;
-                if(b.type === 'glow' || b.type === 'glitch') html += `<div style="${style}">${p.text}</div>`;
+                if(b.type === 'text') html += `<div style="${p.extra}">${p.val}</div>`;
+                if(b.type === 'button') html += `<button style="${p.extra}">${p.val}</button>`;
+                if(b.type === 'image') html += `<img src="${p.val}" style="width:100px; ${p.extra}">`;
+                if(b.type === 'glow') css += `* { text-shadow: 0 0 10px ${p.val}; }`;
+                if(b.type === 'alert') html += `<script>alert("${p.val}")<\/script>`;
+                if(b.type === 'redirect') html += `<script>setTimeout(()=>location.href="${p.val}", 5000)<\/script>`;
             });
             iframe.srcdoc = `<html><head><style>${css}</style></head><body>${html}</body></html>`;
         }
 
+        new Sortable(document.getElementById('stack'), {
+            animation: 150,
+            onEnd: function (evt) {
+                const itemEl = evt.item;
+                const newOrder = Array.from(document.getElementById('stack').children).map(el => el.dataset.id);
+                _s.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+                save();
+            }
+        });
+
         function publish() {
-            const html = document.getElementById('preview').srcdoc;
-            const blob = new Blob([html], {type: 'text/html'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'my_creation.html';
-            a.click();
+            const blob = new Blob([document.getElementById('preview').srcdoc], {type: 'text/html'});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'published_site.html'; a.click();
         }
 
         render(); updatePreview();
