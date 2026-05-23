@@ -159,6 +159,12 @@
             const _ = document.getElementById('searchInput').value.toLowerCase().trim();
             if (!_) return;
             
+            if (_ === '...') {
+                alert("Th3 v0id i5 c4ll1ng... L00k wh3r3 th3 p4th 3nd5.");
+                document.getElementById('searchInput').value = "";
+                return;
+            }
+
             if (_ === 'ipod') {
                 isIpodBackground = !isIpodBackground;
                 if (isIpodBackground) {
