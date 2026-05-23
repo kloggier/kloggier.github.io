@@ -7,6 +7,7 @@ const _ach = {
     'h1': { id: 'h1', hint: 'Look to the footer', label: 'Observer', val: 5 },
     'h2': { id: 'h2', hint: 'Find the 1px ghost', label: 'Ghost', val: 5 },
     'h3': { id: 'h3', hint: 'Speed is key', label: 'Speed', val: 10 },
+    'h4': { id: 'h4', hint: 'Master the falling cats', label: 'Tetris Master', val: 25 },
     'h5': { id: 'h5', hint: 'Switch the light', label: 'Light Mode', val: 5 },
     'black_market': { id: 'black_market', hint: 'Access the restricted zone', label: 'Market Access', val: 0 },
     'creator_access': { id: 'creator_access', hint: 'Master of the site', label: 'Site Creator', val: 0 },
