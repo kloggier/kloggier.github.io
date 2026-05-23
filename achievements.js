@@ -1,5 +1,5 @@
 const _ach = {
-    'e1': { id: 'e1', hint: 'Man's best friend, but inverted', label: 'Doge' },
+    'e1': { id: 'e1', hint: "Man's best friend, but inverted", label: 'Doge' },
     'e2': { id: 'e2', hint: 'The gaze that persists', label: 'Watcher' },
     'e3': { id: 'e3', hint: '...', label: 'Void' },
     'e4': { id: 'e4', hint: 'The factory of meat', label: 'Slaughterhouse' },
