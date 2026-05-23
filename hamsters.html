@@ -177,6 +177,28 @@
                 'e4': 'The factory of meat', 'e5': 'The bloodline',
                 'h1': 'Look to the footer', 'h2': 'Find the 1px ghost', 'h3': 'Speed is key'
             };
+        function showVault(_k) {
+            const _vl = document.getElementById('_vl');
+            _vl.innerHTML = '';
+            Object.keys(_k).forEach(k => {
+                if (k === 'hidden' && !_k[k]) return;
+                const li = document.createElement('li');
+                li.innerText = (_k[k] ? '✅ ' : '🔒 ') + k.toUpperCase() + (!_k[k] ? ' (Hint: ' + _h[k] + ')' : '');
+                _vl.appendChild(li);
+            });
+            document.getElementById('_v').style.display = 'block';
+        }
+
+        let isIpodBackground = false;
+        function evilSearch() {
+            const _ = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!_) return;
+            let _k = JSON.parse(localStorage.getItem('_v') || '{"e1":0,"e2":0,"e3":0,"e4":0,"e5":0,"h1":0,"h2":0,"h3":0,"hidden":0}');
+            const _h = {
+                'e1': 'Man\'s best friend, but inverted', 'e2': 'The gaze that persists', 'e3': '...',
+                'e4': 'The factory of meat', 'e5': 'The bloodline',
+                'h1': 'Look to the footer', 'h2': 'Find the 1px ghost', 'h3': 'Speed is key'
+            };
             
             if (_ === 'the vault') {
                 const _vContainer = document.getElementById('_v_container');
@@ -193,17 +215,6 @@
                 }
                 document.getElementById('searchInput').value = "";
                 return;
-            }
-            function showVault(_k) {
-                const _vl = document.getElementById('_vl');
-                _vl.innerHTML = '';
-                Object.keys(_k).forEach(k => {
-                    if (k === 'hidden' && !_k[k]) return;
-                    const li = document.createElement('li');
-                    li.innerText = (_k[k] ? '✅ ' : '🔒 ') + k.toUpperCase() + (!_k[k] ? ' (Hint: ' + _h[k] + ')' : '');
-                    _vl.appendChild(li);
-                });
-                document.getElementById('_v').style.display = 'block';
             }
             
             // ... (rest of logic mapping commands to _k update and state checks)
