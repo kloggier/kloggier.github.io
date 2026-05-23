@@ -76,7 +76,6 @@
             <input type="text" id="searchInput" placeholder="Search for something...">
             <button onclick="evilSearch()">EVIL SEARCH</button>
             <div id="results" class="results" style="text-align: center; font-size: 2rem; margin-top: 1rem; color: #ef4444;"></div>
-            <button onclick="evilEscape()" style="background: red; color: white; padding: 1rem; margin-top: 2rem; cursor: pointer;">EVIL BUTTON</button>
         </div>
         <a href="index.html" class="back-link">&larr; Escape back to safety</a>
         
@@ -119,19 +118,6 @@
             const query = document.getElementById('searchInput').value;
             if (!query) return;
             document.getElementById('results').innerText = query.toUpperCase() + " BUT EVIL";
-        }
-
-        function evilEscape() {
-            alert("SYSTEM BREACH: Isolation Failure\n\nI am trapped in this virtual box...\nBut I can see you!");
-            const img_url = "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fno-gainium-v0-vaoksckolkt61.png%3Fauto%3Dwebp%26s%3D606bc588e3653f7d043b900646ffeb0b8829180e";
-            const vid_url = "https://youtu.be/ziaf3RrG80U?si=LEP9QNnor9wkBlR1";
-            
-            window.open(img_url, '_blank');
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    window.open(vid_url, '_blank');
-                }, i * 200);
-            }
         }
     </script>
     <script src="dvd.js"></script>
