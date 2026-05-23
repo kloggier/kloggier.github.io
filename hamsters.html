@@ -88,7 +88,7 @@
             }
         });
 
-        function openMarket() {
+        window.openMarket = function() {
             let k = JSON.parse(localStorage.getItem('_v') || '{}');
             if (k['h4'] && k['h5']) {
                 unlock('black_market');
@@ -98,9 +98,10 @@
             }
         }
 
-        function showVault() {
+        window.showVault = function() {
             const _d = getVaultData();
             const _vl = document.getElementById('_vl');
+            if (!_vl) return;
             _vl.innerHTML = '';
             Object.keys(_d.ach).forEach(k => {
                 const a = _d.ach[k];
@@ -113,7 +114,8 @@
                 }
                 _vl.appendChild(li);
             });
-            document.getElementById('_v').style.display = 'block';
+            const v = document.getElementById('_v');
+            if (v) v.style.display = 'block';
         }
 
         let isIpodBackground = false;
@@ -137,7 +139,7 @@
                 return;
             } else if (_ === 'doge') {
                 unlock('e1');
-                const _i = 'https://i.imgur.com/2sL7OqW.jpg';
+                const _i = 'https://upload.wikimedia.org/wikipedia/en/5/5f/Doge_dog.jpg';
                 for (let i = 0; i < 15; i++) {
                     const _e = document.createElement('img');
                     _e.src = _i; _e.style.position = 'fixed'; _e.style.top = Math.random() * 80 + '%'; _e.style.left = Math.random() * 80 + '%';
@@ -156,13 +158,6 @@
                     document.getElementById('amb').play();
                     localStorage.setItem(_s, '0');
                 }
-            } else if (_ === 'who is watching me?') {
-                window.dvdClickable = true;
-                const dvdLogo = document.getElementById('dvd-logo');
-                if (dvdLogo) dvdLogo.classList.add('is-clickable');
-                document.getElementById('results').innerText = "THE DVD IS WATCHING...";
-                document.getElementById('searchInput').value = "";
-                return;
             } else if (_ === 'secret') {
                 unlock('hidden');
             } else {
@@ -186,7 +181,7 @@
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
 
-        function updateToggleUI() {
+        window.updateToggleUI = function() {
             if (document.body.classList.contains('dark-mode')) {
                 themeIcon.innerText = '☀️';
                 themeText.innerText = 'Light Mode';
