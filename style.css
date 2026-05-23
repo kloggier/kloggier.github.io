@@ -205,12 +205,13 @@ nav {
     background: var(--bg-color);
     z-index: 9999;
     pointer-events: none;
-    animation: fadeOut 0.8s ease-out;
+    animation: fadeOut 0.8s ease-out forwards;
 }
 
 @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    0% { opacity: 1; visibility: visible; }
+    99% { opacity: 0; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
 }
 
 /* Smooth Fade In */
