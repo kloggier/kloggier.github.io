@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Hamster Horde - Evil Hamsters</title>
     <link rel="stylesheet" href="style.css">
+    <script src="_s_912.js"></script>
+    <script>
+        initTheme();
+    </script>
     <style>
         .gallery-title { text-align: center; padding: 4rem 0 2rem; font-size: 3rem; color: #ef4444; }
         .hamster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; padding-bottom: 5rem; }
@@ -19,11 +23,6 @@
 </head>
 <body>
     <div class="transition-overlay"></div>
-    <script>
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.body.classList.add('dark-mode');
-        }
-    </script>
     <header>
         <nav class="container">
             <div class="logo" style="color: #ef4444;">Kloggier</div>
@@ -73,36 +72,6 @@
     </div>
 
     <script>
-        const _ach = {
-            'e1': { id: 'e1', hint: "Man's best friend, but inverted", label: 'Doge' },
-            'e2': { id: 'e2', hint: 'The gaze that persists', label: 'Watcher' },
-            'e3': { id: 'e3', hint: '...', label: 'Void' },
-            'e4': { id: 'e4', hint: 'The factory of meat', label: 'Slaughterhouse' },
-            'e5': { id: 'e5', hint: 'The bloodline', label: 'Bloodlust' },
-            'h1': { id: 'h1', hint: 'Look to the footer', label: 'Observer' },
-            'h2': { id: 'h2', hint: 'Find the 1px ghost', label: 'Ghost' },
-            'h3': { id: 'h3', hint: 'Speed is key', label: 'Speed' },
-            'hidden': { id: 'hidden', hint: '???', label: 'Secret' }
-        };
-
-        function unlock(id) {
-            let k = JSON.parse(localStorage.getItem('_v') || '{}');
-            k[id] = 1;
-            localStorage.setItem('_v', JSON.stringify(k));
-        }
-
-        function getVaultData() {
-            try {
-                return {
-                    state: JSON.parse(localStorage.getItem('_v') || '{}'),
-                    ach: _ach
-                };
-            } catch (e) {
-                console.error("Vault data corrupted:", e);
-                return { state: {}, ach: _ach };
-            }
-        }
-
         const _s = '_p';
         if(window.location.href.includes('theyshallgoon')) localStorage.removeItem(_s);
         
@@ -123,7 +92,7 @@
             let k = JSON.parse(localStorage.getItem('_v') || '{}');
             if (k['h4'] && k['h5']) {
                 unlock('black_market');
-                window.location.href = '_m_419.html';
+                window.location.href = 'market_821.html';
             } else {
                 window.open('https://github.com/kloggier', '_blank');
             }
@@ -150,7 +119,6 @@
         let isIpodBackground = false;
         window.evilSearch = function() {
             const _ = document.getElementById('searchInput').value.toLowerCase().trim();
-            console.log("Search input:", _);
             if (!_) return;
             
             if (_ === 'the vault') {
@@ -188,6 +156,13 @@
                     document.getElementById('amb').play();
                     localStorage.setItem(_s, '0');
                 }
+            } else if (_ === 'who is watching me?') {
+                window.dvdClickable = true;
+                const dvdLogo = document.getElementById('dvd-logo');
+                if (dvdLogo) dvdLogo.classList.add('is-clickable');
+                document.getElementById('results').innerText = "THE DVD IS WATCHING...";
+                document.getElementById('searchInput').value = "";
+                return;
             } else if (_ === 'secret') {
                 unlock('hidden');
             } else {
@@ -207,6 +182,7 @@
             document.getElementById('searchInput').value = "";
             if (_ !== '...') document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
         }
+
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
