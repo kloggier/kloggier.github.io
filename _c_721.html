@@ -8,12 +8,12 @@
         :root { --bg: #1e1e1e; --side: #252526; --accent: #007acc; --text: #cccccc; --border: #333; }
         body { margin: 0; display: flex; height: 100vh; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
         .pane { display: flex; flex-direction: column; border-right: 1px solid var(--border); height: 100%; box-sizing: border-box; }
-        #palette { width: 180px; background: var(--side); }
+        #palette { width: 220px; background: var(--side); }
         #workspace { width: 240px; background: var(--bg); padding: 10px; }
         #sidebar { width: 240px; background: var(--side); padding: 10px; border-left: 1px solid var(--border); }
         #stage { flex-grow: 1; background: white; position: relative; }
-        .tabs { display: flex; background: #333; }
-        .tab { flex: 1; padding: 5px; font-size: 10px; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; }
+        .tabs { display: flex; background: #333; flex-wrap: wrap; }
+        .tab { flex: 1; min-width: 45px; padding: 5px; font-size: 9px; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; }
         .tab.active { border-color: var(--accent); background: var(--bg); }
         .section-title { font-size: 10px; font-weight: bold; text-transform: uppercase; margin: 10px 0; color: #888; }
         .block-item { background: #333; padding: 6px; margin-bottom: 4px; cursor: pointer; border-radius: 3px; font-size: 11px; border: 1px solid transparent; }
@@ -32,6 +32,8 @@
     <div id="palette" class="pane">
         <div class="tabs">
             <div class="tab active" onclick="switchTab('html')">HTML</div>
+            <div class="tab" onclick="switchTab('css')">CSS</div>
+            <div class="tab" onclick="switchTab('js')">JS</div>
             <div class="tab" onclick="switchTab('logic')">LOGIC</div>
             <div class="tab" onclick="switchTab('math')">MATH</div>
         </div>
@@ -40,9 +42,16 @@
             <div class="block-item" onclick="add('button')">Button</div>
             <div class="block-item" onclick="add('image')">Image</div>
         </div>
+        <div id="p-css" class="p-content hidden" style="padding:10px;">
+            <div class="block-item" onclick="add('style')">Custom Style</div>
+            <div class="block-item" onclick="add('glow')">Glow CSS</div>
+        </div>
+        <div id="p-js" class="p-content hidden" style="padding:10px;">
+            <div class="block-item" onclick="add('script')">Custom Script</div>
+            <div class="block-item" onclick="add('alert')">Alert JS</div>
+        </div>
         <div id="p-logic" class="p-content hidden" style="padding:10px;">
             <div class="block-item" onclick="add('if')">If Block</div>
-            <div class="block-item" onclick="add('alert')">Alert Block</div>
             <div class="block-item" onclick="add('redirect')">Redirect</div>
         </div>
         <div id="p-math" class="p-content hidden" style="padding:10px;">
@@ -91,6 +100,8 @@
             const props = { val: 'New ' + type, extra: '' };
             if (type === 'if') props.val = '1 === 1';
             if (type === 'calc') props.val = 'x = 5 + 5';
+            if (type === 'style') props.val = '.myClass { color: red; }';
+            if (type === 'script') props.val = 'console.log("hello")';
             _s.push({ id, type, props });
             _sel = id;
             save(); render();
@@ -125,7 +136,7 @@
             const b = _s.find(x => x.id === _sel);
             if(!b) { panel.innerHTML = '<div class="section-title">Properties</div>'; return; }
             panel.innerHTML = `<div class="section-title">Edit: ${b.type}</div>
-                <div class="prop-group"><label>Expression / Value</label><input value="${b.props.val}" oninput="up('val', this.value)"></div>
+                <div class="prop-group"><label>Expression / Value</label><textarea style="height:80px;" oninput="up('val', this.value)">${b.props.val}</textarea></div>
                 <div class="prop-group"><label>Optional Styles</label><textarea oninput="up('extra', this.value)">${b.props.extra}</textarea></div>`;
         }
 
@@ -149,16 +160,17 @@
                 if(b.type === 'text') html += `<div style="${p.extra}">${p.val}</div>`;
                 if(b.type === 'button') html += `<button style="${p.extra}">${p.val}</button>`;
                 if(b.type === 'image') html += `<img src="${p.val}" style="width:100px; ${p.extra}">`;
+                if(b.type === 'style') css += p.val;
+                if(b.type === 'glow') css += `* { text-shadow: 0 0 10px ${p.val}; }`;
+                if(b.type === 'script') js += p.val + ';';
                 if(b.type === 'var') js += `var ${p.val};`;
                 if(b.type === 'calc') js += `${p.val};`;
                 if(b.type === 'if') js += `if(${p.val}) {`;
                 if(b.type === 'alert') js += `alert("${p.val}");`;
                 if(b.type === 'redirect') js += `setTimeout(()=>location.href="${p.val}", 2000);`;
             });
-            // Closing open if blocks (naive)
             _s.filter(b => b.type === 'if').forEach(() => js += '}');
             js += '} catch(e) { console.error(e) }';
-            
             iframe.srcdoc = `<html><head><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
         }
 
