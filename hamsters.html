@@ -88,6 +88,7 @@
     </header>
 
     <main class="container">
+        <audio id="amb" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
         <h1 class="gallery-title">The Evil Hamster Horde</h1>
         <div class="search-box" style="text-align: center; margin: 2rem 0;">
             <input type="text" id="searchInput" placeholder="Search for something...">
@@ -162,18 +163,29 @@
                         return;
                     }
 
+                    if (_ === 'they are watching you') {
+                        const _n = prompt("Who goes there?");
+                        if (_n) {
+                            document.body.style.background = "radial-gradient(circle, #220000 0%, #000000 100%)";
+                            document.getElementById('results').innerText = "Hello " + _n;
+                            document.getElementById('amb').play();
+                        }
+                        document.getElementById('searchInput').value = "";
+                        return;
+                    }
+
                     const _x = {
                         'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg'],
-                        'bloodlust': ['https://www.youtube.com/watch?v=1bK1-P6T_Zg'],
+                        'bloodlust': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5'],
                         'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg'],
                         'slaughterhouse': ['https://youtu.be/CC7zfHByLSk?si=EwoeSVfLEek7cvLt'],
                         'goon': ['https://www.youtube.com/watch?v=t5Q3M7N-h1Q'],
                         'jeff': ['https://youtu.be/PkU8FTafNQU?si=oMaYAfszS6Du7Kv6']
                     };
-
                     if (_x[_]) _x[_].forEach(u => window.open(u, '_blank'));
                     document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
                 }
+
 
         }
 
