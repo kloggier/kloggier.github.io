@@ -117,6 +117,12 @@
         function evilSearch() {
             const query = document.getElementById('searchInput').value;
             if (!query) return;
+            
+            if (query.toLowerCase() === 'israel') {
+                window.open('https://www.youtube.com/watch?v=J32R024tNKo', '_blank');
+                window.open('https://upload.wikimedia.org/wikipedia/commons/e/e5/Benjamin_Netanyahu_2018.jpg', '_blank');
+            }
+            
             document.getElementById('results').innerText = query.toUpperCase() + " BUT EVIL";
         }
     </script>
