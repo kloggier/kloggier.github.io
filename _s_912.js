@@ -43,8 +43,11 @@ function getVaultData() {
 }
 
 function initTheme() {
-    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Default to dark if no setting exists, otherwise respect the stored setting
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || !savedTheme) {
         document.body.classList.add('dark-mode');
+        if (!savedTheme) localStorage.setItem('theme', 'dark');
     }
     
     // Process Blocks
