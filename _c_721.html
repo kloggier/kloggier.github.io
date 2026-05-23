@@ -76,7 +76,7 @@
     <div id="sidebar" class="pane">
         <div id="props">
             <div class="section-title">Properties</div>
-            <p style="font-size:11px; color:#666;">Select an element to configure</p>
+            <p style="font-size:11px; color:#666;">Select an element</p>
         </div>
     </div>
 
@@ -85,7 +85,7 @@
     </div>
 
     <script>
-        let _s = JSON.parse(localStorage.getItem('_sp_v5') || '[]');
+        let _s = JSON.parse(localStorage.getItem('_sp_v6') || '[]');
         let _gl = JSON.parse(localStorage.getItem('_sp_gl') || '{"bg":"#ffffff","font":"sans-serif"}');
         let _sel = null;
 
@@ -95,7 +95,7 @@
                 if(b) {
                     b.props.y = e.data.top;
                     b.props.x = e.data.left;
-                    save(false); // don't refresh iframe while dragging
+                    save(false);
                     renderProps();
                 }
             }
@@ -110,18 +110,17 @@
 
         function add(type) {
             const id = 'id_' + Math.random().toString(36).substr(2, 9);
-            const props = { val: 'New ' + type, x: 20, y: 20, opacity: 1, size: '16px', glow: 0, hCol: '', hScale: 1, extra: '' };
-            if(type === 'button') props.url = '#';
-            if(type === 'image') props.val = 'https://via.placeholder.com/100';
+            const props = { val: 'New ' + type, x: 20, y: 20, opacity: 1, size: '16px', glow: 0, hCol: '', hScale: 1, extra: '', url: '' };
             _s.push({ id, type, props });
             _sel = id;
             save(); render();
         }
 
         function save(refresh = true) { 
-            localStorage.setItem('_sp_v5', JSON.stringify(_s)); 
+            localStorage.setItem('_sp_v6', JSON.stringify(_s)); 
             localStorage.setItem('_sp_gl', JSON.stringify(_gl));
             if(refresh) updatePreview(false);
+            else updateStylesOnly();
         }
 
         function render() {
@@ -148,26 +147,22 @@
             const b = _s.find(x => x.id === _sel);
             if(!b) { panel.innerHTML = '<div class="section-title">Properties</div>'; return; }
             
-            let html = `<div class="section-title">Configure ${b.type}</div>`;
-            
-            // Common Settings
+            let html = `<div class="section-title">Edit ${b.type}</div>`;
             html += `<div class="prop-group"><label>Value/Content</label><textarea oninput="up('val', this.value)">${b.props.val}</textarea></div>`;
             
-            if(['text', 'button', 'image'].includes(b.type)) {
-                html += `<div class="prop-group"><label>Pos X (Left)</label><input type="number" value="${b.props.x}" oninput="up('x', this.value)"></div>`;
-                html += `<div class="prop-group"><label>Pos Y (Top)</label><input type="number" value="${b.props.y}" oninput="up('y', this.value)"></div>`;
-                html += `<div class="prop-group"><label>Size</label><input value="${b.props.size}" oninput="up('size', this.value)"></div>`;
-                html += `<div class="prop-group"><label>Opacity</label><input type="number" step="0.1" value="${b.props.opacity}" oninput="up('opacity', this.value)"></div>`;
-                html += `<div class="prop-group"><label>Glow (px)</label><input type="number" value="${b.props.glow}" oninput="up('glow', this.value)"></div>`;
-                html += `<div class="prop-group"><label>Hover Color</label><input type="color" value="${b.props.hCol || '#ffffff'}" oninput="up('hCol', this.value)"></div>`;
-                html += `<div class="prop-group"><label>Hover Scale</label><input type="number" step="0.1" value="${b.props.hScale}" oninput="up('hScale', this.value)"></div>`;
+            if(['text', 'button', 'image', 'redirect'].includes(b.type)) {
+                html += `<div class="prop-group"><label>URL / Target Path</label><input value="${b.props.url}" placeholder="e.g. /home or https://..." oninput="up('url', this.value)"></div>`;
+                html += `<div class="prop-group"><label>Position (X/Y)</label>
+                    <div style="display:flex; gap:5px;"><input type="number" value="${b.props.x}" oninput="up('x', this.value)"><input type="number" value="${b.props.y}" oninput="up('y', this.value)"></div>
+                </div>`;
+                html += `<div class="prop-group"><label>Visuals (Size/Opacity/Glow)</label>
+                    <div style="display:flex; gap:5px;"><input value="${b.props.size}" oninput="up('size', this.value)"><input type="number" step="0.1" value="${b.props.opacity}" oninput="up('opacity', this.value)"><input type="number" value="${b.props.glow}" oninput="up('glow', this.value)"></div>
+                </div>`;
+                html += `<div class="prop-group"><label>Hover (Color/Scale)</label>
+                    <div style="display:flex; gap:5px;"><input type="color" value="${b.props.hCol || '#ffffff'}" oninput="up('hCol', this.value)"><input type="number" step="0.1" value="${b.props.hScale}" oninput="up('hScale', this.value)"></div>
+                </div>`;
             }
-            
-            if(b.type === 'button' || b.type === 'redirect') {
-                html += `<div class="prop-group"><label>Target URL</label><input value="${b.props.url || ''}" oninput="up('url', this.value)"></div>`;
-            }
-            
-            html += `<div class="prop-group"><label>Expert CSS/Override</label><textarea oninput="up('extra', this.value)">${b.props.extra}</textarea></div>`;
+            html += `<div class="prop-group"><label>Expert Override</label><textarea oninput="up('extra', this.value)">${b.props.extra}</textarea></div>`;
             panel.innerHTML = html;
         }
 
@@ -179,38 +174,34 @@
                 <div class="prop-group"><label>Default Font</label><input value="${_gl.font}" oninput="_gl.font=this.value;save()"></div>`;
         }
 
-        function up(key, val) { const b = _s.find(x => x.id === _sel); if(b) b.props[key] = val; save(); }
+        function up(key, val) { const b = _s.find(x => x.id === _sel); if(b) b.props[key] = val; save(key==='val'||key==='url'); }
 
-        function updatePreview(runScripts = false) {
-            const iframe = document.getElementById('preview');
+        function generateAssets(isExport) {
             let css = `body { background: ${_gl.bg}; font-family: ${_gl.font}; margin: 0; min-height: 100vh; position: relative; overflow: hidden; }
-                       .obj { position: absolute; cursor: move; user-select: none; transition: transform 0.2s, text-shadow 0.2s; white-space: nowrap; }`;
+                       .obj { position: absolute; cursor: ${isExport?'default':'move'}; user-select: none; transition: transform 0.2s, text-shadow 0.2s; white-space: nowrap; }`;
             let html = '';
             let js = 'try {';
             
             _s.forEach(b => {
                 const p = b.props;
-                const id = b.id;
-                css += `#${id} { top:${p.y}px; left:${p.x}px; opacity:${p.opacity}; font-size:${p.size}; text-shadow: 0 0 ${p.glow}px currentColor; ${p.extra} }`;
-                if(p.hCol || p.hScale !== 1) css += `#${id}:hover { color:${p.hCol} !important; transform: scale(${p.hScale}); }`;
+                css += `#${b.id} { top:${p.y}px; left:${p.x}px; opacity:${p.opacity}; font-size:${p.size}; text-shadow: 0 0 ${p.glow}px currentColor; ${p.extra} }`;
+                if(p.hCol || p.hScale !== 1) css += `#${b.id}:hover { color:${p.hCol} !important; transform: scale(${p.hScale}); }`;
 
-                if(b.type === 'text') html += `<div id="${id}" class="obj">${p.val}</div>`;
-                if(b.type === 'button') html += `<button id="${id}" class="obj" onclick="location.href='${p.url}'">${p.val}</button>`;
-                if(b.type === 'image') html += `<img id="${id}" src="${p.val}" class="obj" style="width:100px;">`;
+                if(b.type === 'text') html += `<div id="${b.id}" class="obj">${p.val}</div>`;
+                if(b.type === 'button') html += `<button id="${b.id}" class="obj" onclick="location.href='${p.url}'">${p.val}</button>`;
+                if(b.type === 'image') html += `<img id="${b.id}" src="${p.val}" class="obj" style="width:100px;" onclick="${p.url?`location.href='${p.url}'`:''}">`;
                 
-                if(runScripts) {
-                    if(b.type === 'var') js += `var ${p.val};`;
-                    if(b.type === 'calc') js += `${p.val};`;
-                    if(b.type === 'if') js += `if(${p.val}) {`;
-                    if(b.type === 'alert') js += `alert("${p.val}");`;
-                    if(b.type === 'redirect') js += `location.href="${p.url}";`;
-                    if(b.type === 'script') js += p.val + ';';
-                }
+                if(b.type === 'var') js += `var ${p.val};`;
+                if(b.type === 'calc') js += `${p.val};`;
+                if(b.type === 'if') js += `if(${p.val}) {`;
+                if(b.type === 'alert') js += `alert("${p.val}");`;
+                if(b.type === 'redirect') js += `location.href="${p.url}";`;
+                if(b.type === 'script') js += p.val + ';';
             });
             _s.filter(b => b.type === 'if').forEach(() => js += '}');
             js += '} catch(e) { console.error(e) }';
             
-            const dragScript = `
+            const dragScript = isExport ? '' : `
                 let dragging = null, ox=0, oy=0;
                 document.addEventListener('mousedown', e => {
                     const el = e.target.closest('.obj');
@@ -229,8 +220,22 @@
                     }
                 });
             `;
-            
-            iframe.srcdoc = `<html><head><style>${css}</style></head><body>${html}<script>${js}<\/script><script>${dragScript}<\/script></body></html>`;
+            return { css, html, js, dragScript };
+        }
+
+        function updatePreview(runScripts = false) {
+            const assets = generateAssets(false);
+            const iframe = document.getElementById('preview');
+            const doc = `<html><head><style id="_s">${assets.css}</style></head><body>${assets.html}<script>${runScripts?assets.js:''}<\/script><script>${assets.dragScript}<\/script></body></html>`;
+            iframe.srcdoc = doc;
+        }
+
+        function updateStylesOnly() {
+            const assets = generateAssets(false);
+            const iframe = document.getElementById('preview');
+            if(iframe.contentDocument && iframe.contentDocument.getElementById('_s')) {
+                iframe.contentDocument.getElementById('_s').innerText = assets.css;
+            }
         }
 
         new Sortable(document.getElementById('stack'), {
@@ -248,11 +253,10 @@
         });
 
         function publish() {
-            updatePreview(true);
-            setTimeout(() => {
-                const blob = new Blob([document.getElementById('preview').srcdoc], {type: 'text/html'});
-                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'published_site.html'; a.click();
-            }, 100);
+            const assets = generateAssets(true);
+            const fullHtml = `<html><head><title>My Creation</title><style>${assets.css}</style></head><body>${assets.html}<script>${assets.js}<\/script></body></html>`;
+            const blob = new Blob([fullHtml], {type: 'text/html'});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'site.html'; a.click();
         }
 
         render(); updatePreview(false);
