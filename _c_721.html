@@ -110,6 +110,7 @@
         function save() { 
             localStorage.setItem('_sp_v3', JSON.stringify(_s)); 
             localStorage.setItem('_sp_gl', JSON.stringify(_gl));
+            updatePreview();
         }
 
         function render() {
