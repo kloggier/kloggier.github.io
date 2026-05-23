@@ -147,9 +147,11 @@
         let isIpodBackground = false;
         function evilSearch() {
             const _ = document.getElementById('searchInput').value.toLowerCase().trim();
+            console.log("Search input:", _);
             if (!_) return;
             
             if (_ === 'the vault') {
+                console.log("Triggering redirect to _v_9381.html");
                 window.location.href = '_v_9381.html';
                 return;
             }
