@@ -71,14 +71,24 @@ nav {
     min-height: 80vh;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 4rem;
+    justify-content: center;
+    text-align: center;
     padding: 4rem 0;
 }
 
 .hero-content {
-    flex: 1;
-    text-align: left;
+    max-width: 800px;
+}
+
+.hero-image {
+    margin-bottom: 2rem;
+}
+
+.hero-image img {
+    width: 250px; /* 2x smaller than typical full-width hero images */
+    height: auto;
+    border-radius: 2rem; /* Rounder corners */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .hero-content h1 {
@@ -91,19 +101,9 @@ nav {
 
 .hero-content p {
     font-size: 1.25rem;
-    margin-bottom: 2rem;
+    margin: 0 auto 2rem;
+    max-width: 600px;
     color: #4b5563;
-}
-
-.hero-image {
-    flex: 1;
-}
-
-.hero-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 1.5rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .btn {
