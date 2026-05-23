@@ -102,8 +102,7 @@
                 return { state: {}, ach: _ach };
             }
         }
-    </script>
-    <script>
+
         const _s = '_p';
         if(window.location.href.includes('theyshallgoon')) localStorage.removeItem(_s);
         
@@ -130,9 +129,24 @@
             }
         }
 
+        function showVault() {
+            const _d = getVaultData();
+            const _vl = document.getElementById('_vl');
+            _vl.innerHTML = '';
+            Object.keys(_d.ach).forEach(k => {
+                const a = _d.ach[k];
+                if (a.id === 'hidden' && !_d.state[a.id]) return;
+                const li = document.createElement('li');
+                li.innerText = (_d.state[a.id] ? '✅ ' : '🔒 ') + a.label + (!_d.state[a.id] ? ' (Hint: ' + a.hint + ')' : '');
+                _vl.appendChild(li);
+            });
+            document.getElementById('_v').style.display = 'block';
+        }
+
         let isIpodBackground = false;
-        function evilSearch() {
+        window.evilSearch = function() {
             const _ = document.getElementById('searchInput').value.toLowerCase().trim();
+            console.log("Search input:", _);
             if (!_) return;
             
             if (_ === 'the vault') {
@@ -196,33 +210,6 @@
             document.getElementById('searchInput').value = "";
             if (_ !== '...') document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
         }
-
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
-
-        function updateToggleUI() {
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.innerText = '☀️';
-                themeText.innerText = 'Light Mode';
-            } else {
-                themeIcon.innerText = '🌙';
-                themeText.innerText = 'Dark Mode';
-            }
-        }
-
-        updateToggleUI();
-
-        themeToggle.addEventListener('click', () => {
-            unlock('h5');
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-            }
-            updateToggleUI();
-        });
     </script>
     <script src="dvd.js"></script>
     <script src="music.js"></script>
