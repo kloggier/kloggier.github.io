@@ -336,6 +336,20 @@
             update();
         };
     </script>
+    <script>
+        window.unlock = function(id) {
+            let k = JSON.parse(localStorage.getItem('_v') || '{}');
+            k[id] = 1;
+            localStorage.setItem('_v', JSON.stringify(k));
+        };
+        window.forceTetrisWin = function() {
+            unlock('tetris_win');
+            if (typeof winScreen !== 'undefined') winScreen.style.display = 'flex';
+            window.isGameOver = true;
+            if (typeof requestID !== 'undefined') cancelAnimationFrame(requestID);
+            console.log("Tetris win forced.");
+        };
+    </script>
     <script src="dvd.js"></script>
     <script src="music.js"></script>
     <script src="hacker.js"></script>
