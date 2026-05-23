@@ -183,7 +183,11 @@
                     _e.style.top = Math.random() * 80 + '%';
                     _e.style.left = Math.random() * 80 + '%';
                     _e.style.width = '150px';
+                    _e.style.height = '150px';
                     _e.style.zIndex = '10000';
+                    _e.style.border = '5px solid red'; // Make element visible
+                    _e.style.background = 'white';    // Make element visible
+                    _e.onerror = () => console.error("Doge image failed to load:", _i);
                     document.body.appendChild(_e);
                 }
                 document.getElementById('searchInput').value = "";
