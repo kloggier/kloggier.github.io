@@ -71,6 +71,7 @@
         border-radius: 1rem;
         border: 2px solid #ef4444;
     }
+    .captcha-box h3 { margin-bottom: 10px; }
     .captcha-box input {
         padding: 10px;
         margin: 10px 0;
@@ -97,7 +98,7 @@
     captchaOverlay.className = 'captcha-overlay';
     captchaOverlay.innerHTML = `
         <div class="captcha-box">
-            <h3>Solve to Disable DVD</h3>
+            <h3 id="captcha-title">Solve to Disable DVD</h3>
             <p id="captcha-question"></p>
             <input type="text" id="captcha-answer" placeholder="Your answer">
             <button id="captcha-submit">Submit</button>
@@ -107,23 +108,45 @@
     document.body.appendChild(captchaOverlay);
 
     let captchaSolution = 0;
+    let isDvdEnabled = true;
 
     toggleBtn.addEventListener('click', () => {
-        const a = Math.floor(Math.random() * 20);
-        const b = Math.floor(Math.random() * 20);
-        captchaSolution = a + b;
-        document.getElementById('captcha-question').innerText = `What is ${a} + ${b}?`;
+        if (isDvdEnabled) {
+            // Easy Captcha to Disable
+            const a = Math.floor(Math.random() * 20);
+            const b = Math.floor(Math.random() * 20);
+            captchaSolution = a + b;
+            document.getElementById('captcha-title').innerText = 'Solve to Disable DVD';
+            document.getElementById('captcha-question').innerText = `What is ${a} + ${b}?`;
+        } else {
+            // Hard Captcha to Enable
+            const a = Math.floor(Math.random() * 15) + 11; // 11-25
+            const b = Math.floor(Math.random() * 15) + 11; // 11-25
+            captchaSolution = a * b;
+            document.getElementById('captcha-title').innerText = 'Solve to Enable DVD (Hard Mode)';
+            document.getElementById('captcha-question').innerText = `What is ${a} × ${b}?`;
+        }
+        document.getElementById('captcha-answer').value = '';
         captchaOverlay.style.display = 'flex';
     });
 
     document.getElementById('captcha-submit').addEventListener('click', () => {
         const val = parseInt(document.getElementById('captcha-answer').value);
         if (val === captchaSolution) {
-            dvdLogo.style.display = 'none';
-            toggleBtn.style.display = 'none';
+            isDvdEnabled = !isDvdEnabled;
+            if (isDvdEnabled) {
+                dvdLogo.style.display = 'block';
+                toggleBtn.innerText = 'Disable DVD';
+                toggleBtn.style.background = '#ef4444';
+                update(); // Restart loop if it stopped
+            } else {
+                dvdLogo.style.display = 'none';
+                toggleBtn.innerText = 'Enable DVD';
+                toggleBtn.style.background = '#10b981';
+            }
             captchaOverlay.style.display = 'none';
         } else {
-            alert('Wrong! The DVD remains.');
+            alert('Wrong answer! Challenge failed.');
             captchaOverlay.style.display = 'none';
         }
     });
@@ -141,7 +164,7 @@
     let colorIndex = 0;
 
     function update() {
-        if (dvdLogo.style.display === 'none') return;
+        if (!isDvdEnabled) return;
         
         const width = window.innerWidth;
         const height = window.innerHeight;
