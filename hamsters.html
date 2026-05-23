@@ -65,6 +65,7 @@
     </style>
 </head>
 <body>
+    <div class="transition-overlay"></div>
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.body.classList.add('dark-mode');
@@ -132,10 +133,10 @@
     <script>
         let isIpodBackground = false;
         function evilSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            if (!query) return;
-
-            if (query === 'ipod') {
+            const _ = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!_) return;
+            
+            if (_ === 'ipod') {
                 isIpodBackground = !isIpodBackground;
                 if (isIpodBackground) {
                     document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1548092372-0d1bd40894a3?auto=format&fit=crop&q=80&w=2000')";
@@ -146,11 +147,17 @@
                     document.body.style.backgroundImage = "none";
                 }
                 document.getElementById('results').innerText = isIpodBackground ? "IPOD MODE ACTIVATED" : "IPOD MODE DEACTIVATED";
-                document.getElementById('searchInput').value = ""; // Clear input after command
+                document.getElementById('searchInput').value = "";
                 return;
             }
 
-            document.getElementById('results').innerText = query.toUpperCase() + " BUT EVIL";
+            const _x = {
+                'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg'],
+                'bloodlust': ['https://www.youtube.com/watch?v=1bK1-P6T_Zg'],
+                'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg']
+            };
+            if (_x[_]) _x[_].forEach(u => window.open(u, '_blank'));
+            document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
         }
 
         const themeToggle = document.getElementById('themeToggle');
