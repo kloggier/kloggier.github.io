@@ -48,6 +48,7 @@
     </style>
 </head>
 <body>
+    <div class="transition-overlay"></div>
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.body.classList.add('dark-mode');
@@ -58,6 +59,7 @@
             <div class="logo" style="color: #ef4444;">Kloggier</div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
+                <li><a href="https://github.com/kloggier" target="_blank">Projects</a></li>
                 <li>
                     <button id="themeToggle" class="theme-toggle">
                         <span id="themeIcon">🌙</span>

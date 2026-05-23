@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="transition-overlay"></div>
     <script>
         // Check for saved theme preference or system preference
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -20,6 +21,7 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="hamsters.html">Hamsters</a></li>
+                <li><a href="https://github.com/kloggier" target="_blank">Projects</a></li>
                 <li>
                     <button id="themeToggle" class="theme-toggle">
                         <span id="themeIcon">🌙</span>
