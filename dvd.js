@@ -1,4 +1,5 @@
 (function() {
+    console.log("DVD script initializing...");
     window.dvdClickable = false;
     const dvdLogo = document.createElement('div');
     dvdLogo.id = 'dvd-logo';
@@ -15,7 +16,12 @@
     </svg>
     `;
 
-    document.body.appendChild(dvdLogo);
+    if (document.body) {
+        document.body.appendChild(dvdLogo);
+        console.log("DVD logo appended.");
+    } else {
+        console.error("document.body not found!");
+    }
 
     dvdLogo.addEventListener('click', () => {
         if (window.dvdClickable) {
