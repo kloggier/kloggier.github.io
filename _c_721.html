@@ -8,27 +8,21 @@
         :root { --bg: #1e1e1e; --side: #252526; --accent: #007acc; --text: #cccccc; --border: #333; }
         body { margin: 0; display: flex; height: 100vh; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
         .pane { display: flex; flex-direction: column; border-right: 1px solid var(--border); height: 100%; box-sizing: border-box; }
-        
         #palette { width: 180px; background: var(--side); }
-        #workspace { width: 220px; background: var(--bg); padding: 10px; }
-        #sidebar { width: 220px; background: var(--side); padding: 10px; border-left: 1px solid var(--border); }
+        #workspace { width: 240px; background: var(--bg); padding: 10px; }
+        #sidebar { width: 240px; background: var(--side); padding: 10px; border-left: 1px solid var(--border); }
         #stage { flex-grow: 1; background: white; position: relative; }
-        
         .tabs { display: flex; background: #333; }
         .tab { flex: 1; padding: 5px; font-size: 10px; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; }
         .tab.active { border-color: var(--accent); background: var(--bg); }
-        
         .section-title { font-size: 10px; font-weight: bold; text-transform: uppercase; margin: 10px 0; color: #888; }
         .block-item { background: #333; padding: 6px; margin-bottom: 4px; cursor: pointer; border-radius: 3px; font-size: 11px; border: 1px solid transparent; }
         .block-item:hover { background: #444; border-color: var(--accent); }
-        
         .stack-item { background: #2d2d2d; padding: 8px; margin-bottom: 4px; border-left: 3px solid var(--accent); border-radius: 0 3px 3px 0; cursor: grab; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
         .stack-item.active { background: #37373d; outline: 1px solid var(--accent); }
-        
         .prop-group { margin-bottom: 10px; }
         .prop-group label { display: block; font-size: 10px; margin-bottom: 2px; color: #aaa; }
         .prop-group input, .prop-group textarea, .prop-group select { width: 100%; background: #3c3c3c; border: 1px solid #555; color: #fff; padding: 3px; border-radius: 2px; font-size: 11px; }
-        
         iframe { width: 100%; height: 100%; border: none; }
         .btn-main { background: var(--accent); color: white; border: none; padding: 6px; border-radius: 2px; cursor: pointer; margin-top: 5px; width: 100%; font-size: 11px; }
         .hidden { display: none; }
@@ -38,24 +32,26 @@
     <div id="palette" class="pane">
         <div class="tabs">
             <div class="tab active" onclick="switchTab('html')">HTML</div>
-            <div class="tab" onclick="switchTab('css')">CSS</div>
-            <div class="tab" onclick="switchTab('js')">JS</div>
+            <div class="tab" onclick="switchTab('logic')">LOGIC</div>
+            <div class="tab" onclick="switchTab('math')">MATH</div>
         </div>
         <div id="p-html" class="p-content" style="padding:10px;">
             <div class="block-item" onclick="add('text')">Text</div>
             <div class="block-item" onclick="add('button')">Button</div>
             <div class="block-item" onclick="add('image')">Image</div>
         </div>
-        <div id="p-css" class="p-content hidden" style="padding:10px;">
-            <div class="block-item" onclick="add('glow')">Glow Effect</div>
-            <div class="block-item" onclick="add('border')">Border</div>
-        </div>
-        <div id="p-js" class="p-content hidden" style="padding:10px;">
-            <div class="block-item" onclick="add('alert')">Alert</div>
+        <div id="p-logic" class="p-content hidden" style="padding:10px;">
+            <div class="block-item" onclick="add('if')">If Block</div>
+            <div class="block-item" onclick="add('alert')">Alert Block</div>
             <div class="block-item" onclick="add('redirect')">Redirect</div>
+        </div>
+        <div id="p-math" class="p-content hidden" style="padding:10px;">
+            <div class="block-item" onclick="add('var')">Variable</div>
+            <div class="block-item" onclick="add('calc')">Calculate</div>
         </div>
         <div style="margin-top:auto; padding:10px;">
             <button class="btn-main" onclick="showSettings()">Global Settings</button>
+            <button class="btn-main" style="background:#10b981;" onclick="updatePreview()">RUN (Ctrl+Enter)</button>
         </div>
     </div>
     
@@ -79,7 +75,7 @@
     </div>
 
     <script>
-        let _s = JSON.parse(localStorage.getItem('_sp_v2') || '[]');
+        let _s = JSON.parse(localStorage.getItem('_sp_v3') || '[]');
         let _gl = JSON.parse(localStorage.getItem('_sp_gl') || '{"bg":"#ffffff","font":"sans-serif"}');
         let _sel = null;
 
@@ -92,15 +88,17 @@
 
         function add(type) {
             const id = 'id_' + Math.random().toString(36).substr(2, 9);
-            _s.push({ id, type, props: { val: 'New ' + type, extra: '' } });
+            const props = { val: 'New ' + type, extra: '' };
+            if (type === 'if') props.val = '1 === 1';
+            if (type === 'calc') props.val = 'x = 5 + 5';
+            _s.push({ id, type, props });
             _sel = id;
             save(); render();
         }
 
         function save() { 
-            localStorage.setItem('_sp_v2', JSON.stringify(_s)); 
+            localStorage.setItem('_sp_v3', JSON.stringify(_s)); 
             localStorage.setItem('_sp_gl', JSON.stringify(_gl));
-            updatePreview(); 
         }
 
         function render() {
@@ -127,8 +125,8 @@
             const b = _s.find(x => x.id === _sel);
             if(!b) { panel.innerHTML = '<div class="section-title">Properties</div>'; return; }
             panel.innerHTML = `<div class="section-title">Edit: ${b.type}</div>
-                <div class="prop-group"><label>Value</label><input value="${b.props.val}" oninput="up('val', this.value)"></div>
-                <div class="prop-group"><label>Styles/Logic</label><textarea oninput="up('extra', this.value)">${b.props.extra}</textarea></div>`;
+                <div class="prop-group"><label>Expression / Value</label><input value="${b.props.val}" oninput="up('val', this.value)"></div>
+                <div class="prop-group"><label>Optional Styles</label><textarea oninput="up('extra', this.value)">${b.props.extra}</textarea></div>`;
         }
 
         function showSettings() {
@@ -145,31 +143,42 @@
             const iframe = document.getElementById('preview');
             let css = `body { background: ${_gl.bg}; font-family: ${_gl.font}; padding: 20px; }`;
             let html = '';
+            let js = 'try {';
             _s.forEach(b => {
                 const p = b.props;
                 if(b.type === 'text') html += `<div style="${p.extra}">${p.val}</div>`;
                 if(b.type === 'button') html += `<button style="${p.extra}">${p.val}</button>`;
                 if(b.type === 'image') html += `<img src="${p.val}" style="width:100px; ${p.extra}">`;
-                if(b.type === 'glow') css += `* { text-shadow: 0 0 10px ${p.val}; }`;
-                if(b.type === 'alert') html += `<script>alert("${p.val}")<\/script>`;
-                if(b.type === 'redirect') html += `<script>setTimeout(()=>location.href="${p.val}", 5000)<\/script>`;
+                if(b.type === 'var') js += `var ${p.val};`;
+                if(b.type === 'calc') js += `${p.val};`;
+                if(b.type === 'if') js += `if(${p.val}) {`;
+                if(b.type === 'alert') js += `alert("${p.val}");`;
+                if(b.type === 'redirect') js += `setTimeout(()=>location.href="${p.val}", 2000);`;
             });
-            iframe.srcdoc = `<html><head><style>${css}</style></head><body>${html}</body></html>`;
+            // Closing open if blocks (naive)
+            _s.filter(b => b.type === 'if').forEach(() => js += '}');
+            js += '} catch(e) { console.error(e) }';
+            
+            iframe.srcdoc = `<html><head><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
         }
 
         new Sortable(document.getElementById('stack'), {
             animation: 150,
-            onEnd: function (evt) {
-                const itemEl = evt.item;
+            onEnd: function () {
                 const newOrder = Array.from(document.getElementById('stack').children).map(el => el.dataset.id);
                 _s.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
                 save();
             }
         });
 
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); updatePreview(); }
+            if (e.ctrlKey && e.key === 's') { e.preventDefault(); save(); alert('Saved!'); }
+        });
+
         function publish() {
             const blob = new Blob([document.getElementById('preview').srcdoc], {type: 'text/html'});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'published_site.html'; a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'app.html'; a.click();
         }
 
         render(); updatePreview();
