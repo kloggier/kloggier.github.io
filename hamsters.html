@@ -155,19 +155,16 @@
                     _e.style.width = '150px'; _e.style.height = '150px'; _e.style.zIndex = '10000'; _e.style.border = '5px solid red'; _e.style.background = 'white';
                     document.body.appendChild(_e);
                 }
-            } else if (_ === 'they are watching you') {
-                unlock('e2');
-                const _n = prompt("Who goes there?");
-                if (_n) {
-                    document.body.style.background = "radial-gradient(circle, #220000 0%, #000000 100%)";
-                    document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=2000')";
-                    document.body.style.backgroundSize = "cover"; document.body.style.backgroundPosition = "center";
-                    document.body.style.backgroundAttachment = "fixed"; document.body.style.backgroundBlendMode = "multiply";
-                    document.getElementById('results').innerText = "Hello " + _n;
-                    document.getElementById('amb').play();
-                    localStorage.setItem(_s, '0');
-                }
-            } else if (_ === 'secret') {
+            // Watching
+            if (query === 'who is watching me?') {
+                window.dvdClickable = true;
+                const dvdLogo = document.getElementById('dvd-logo');
+                if (dvdLogo) dvdLogo.classList.add('is-clickable');
+                document.getElementById('results').innerText = "THE DVD IS WATCHING...";
+                document.getElementById('searchInput').value = "";
+                return;
+            }
+
                 unlock('hidden');
             } else {
                 const _x = {
