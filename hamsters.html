@@ -45,10 +45,26 @@
         .back-link:hover {
             color: var(--text-color);
         }
+        .search-box input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            width: 300px;
+        }
+        .search-box button {
+            padding: 10px 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <div class="transition-overlay"></div>
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.body.classList.add('dark-mode');
@@ -75,7 +91,7 @@
         <div class="search-box" style="text-align: center; margin: 2rem 0;">
             <input type="text" id="searchInput" placeholder="Search for something...">
             <button onclick="evilSearch()">EVIL SEARCH</button>
-            <div id="results" class="results" style="text-align: center; font-size: 2rem; margin-top: 1rem; color: #ef4444;"></div>
+            <div id="results" class="results" style="text-align: center; font-size: 2rem; margin-top: 1rem; color: #ef4444; min-height: 3rem;"></div>
         </div>
         <a href="index.html" class="back-link">&larr; Escape back to safety</a>
         
@@ -114,17 +130,54 @@
     </footer>
 
     <script>
+        let isIpodBackground = false;
         function evilSearch() {
-            const query = document.getElementById('searchInput').value;
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
             if (!query) return;
-            
-            if (query.toLowerCase() === 'israel') {
-                window.open('https://www.youtube.com/watch?v=J32R024tNKo', '_blank');
-                window.open('https://upload.wikimedia.org/wikipedia/commons/e/e5/Benjamin_Netanyahu_2018.jpg', '_blank');
+
+            if (query === 'ipod') {
+                isIpodBackground = !isIpodBackground;
+                if (isIpodBackground) {
+                    document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1548092372-0d1bd40894a3?auto=format&fit=crop&q=80&w=2000')";
+                    document.body.style.backgroundSize = "cover";
+                    document.body.style.backgroundPosition = "center";
+                    document.body.style.backgroundAttachment = "fixed";
+                } else {
+                    document.body.style.backgroundImage = "none";
+                }
+                document.getElementById('results').innerText = isIpodBackground ? "IPOD MODE ACTIVATED" : "IPOD MODE DEACTIVATED";
+                document.getElementById('searchInput').value = ""; // Clear input after command
+                return;
             }
-            
+
             document.getElementById('results').innerText = query.toUpperCase() + " BUT EVIL";
         }
+
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        function updateToggleUI() {
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.innerText = '☀️';
+                themeText.innerText = 'Light Mode';
+            } else {
+                themeIcon.innerText = '🌙';
+                themeText.innerText = 'Dark Mode';
+            }
+        }
+
+        updateToggleUI();
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+            updateToggleUI();
+        });
     </script>
     <script src="dvd.js"></script>
     <script src="music.js"></script>
