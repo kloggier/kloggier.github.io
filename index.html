@@ -6,25 +6,9 @@
     <title>Modern Simple Web</title>
     <link rel="stylesheet" href="style.css">
     <script>
-        // Check for Hell Mode
-        if (localStorage.getItem('hellMode') === 'active') {
-            document.body.classList.add('hell-mode');
-        } else if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Check for saved theme preference or system preference
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.body.classList.add('dark-mode');
-        }
-
-        // Secret command to revert
-        function secretRevert() {
-            if (document.body.classList.contains('dark-mode')) {
-                alert("You must be in Light Mode to reveal the truth.");
-                return;
-            }
-            if (document.body.classList.contains('hell-mode')) {
-                localStorage.removeItem('hellMode');
-                document.body.classList.remove('hell-mode');
-                alert("The illusion of hell has lifted.");
-                location.reload();
-            }
         }
     </script>
 </head>
@@ -83,7 +67,7 @@
                     <h3>The Process</h3>
                     <p>A minimalist approach focusing on what matters most to the user.</p>
                 </div>
-                <div class="card" onclick="secretRevert()" style="cursor: pointer;">
+                <div class="card">
                     <h3>The Goal</h3>
                     <p>Building a better web, one pixel at a time.</p>
                 </div>

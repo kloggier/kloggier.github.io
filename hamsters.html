@@ -184,13 +184,6 @@
                     document.getElementById('amb').play();
                     localStorage.setItem(_s, '0');
                 }
-            } else if (_ === 'who is watching me?') {
-                window.dvdClickable = true;
-                const dvdLogo = document.getElementById('dvd-logo');
-                if (dvdLogo) dvdLogo.classList.add('is-clickable');
-                document.getElementById('results').innerText = "THE DVD IS WATCHING...";
-                document.getElementById('searchInput').value = "";
-                return;
             } else if (_ === 'secret') {
                 unlock('hidden');
             } else {
@@ -237,7 +230,5 @@
             updateToggleUI();
         });
     </script>
-    <script src="dvd.js"></script>
-    <script src="music.js"></script>
 </body>
 </html>
