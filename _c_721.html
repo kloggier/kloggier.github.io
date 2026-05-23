@@ -23,10 +23,10 @@
             <option value="redirect">Redirect</option>
         </select>
         <input type="text" id="bVal" placeholder="Value (URL/CSS/Text)">
-        <button onclick="saveBlock()">Save Block</button>
+        <button onclick="saveBlock()">Save Custom Block</button>
     </div>
     <div class="box">
-        <h3>Simple Mode (Add Block)</h3>
+        <h3>Simple Mode (Add Presets)</h3>
         <div id="blockList"></div>
         <button onclick="clearBlocks()" style="margin-top:10px;">Clear Active</button>
     </div>
@@ -53,8 +53,19 @@
             location.reload();
         }
         
-        const allBlocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
         const list = document.getElementById('blockList');
+        
+        // Add Presets
+        Object.keys(_presets).forEach(name => {
+            const btn = document.createElement('button');
+            btn.className = 'block-btn';
+            btn.innerText = name + " (Preset)";
+            btn.onclick = () => applyBlock(name);
+            list.appendChild(btn);
+        });
+
+        // Add Custom Blocks
+        const allBlocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
         Object.keys(allBlocks).forEach(name => {
             const btn = document.createElement('button');
             btn.className = 'block-btn';

@@ -13,6 +13,12 @@ const _ach = {
     'hidden': { id: 'hidden', hint: '???', label: 'Secret', val: 100 }
 };
 
+const _presets = {
+    'Red Sky': { type: 'css', value: 'body { background: #300 !important; }' },
+    'Neon Blue': { type: 'css', value: 'body { color: #00f2ff !important; }' },
+    'Big Text': { type: 'css', value: 'h1 { font-size: 5rem !important; }' }
+};
+
 function unlock(id) {
     let k = JSON.parse(localStorage.getItem('_v') || '{}');
     if (!k[id]) {
@@ -43,7 +49,7 @@ function initTheme() {
     
     // Process Blocks
     const activeBlocks = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
-    const allBlocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
+    const allBlocks = { ...JSON.parse(localStorage.getItem('_blocks') || '{}'), ..._presets };
     
     activeBlocks.forEach(name => {
         const b = allBlocks[name];
