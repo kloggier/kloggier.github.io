@@ -6,10 +6,6 @@
     <title>The Hamster Horde - Evil Hamsters</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            background-color: #111827;
-            color: #f9fafb;
-        }
         .gallery-title {
             text-align: center;
             padding: 4rem 0 2rem;
@@ -23,9 +19,10 @@
             padding-bottom: 5rem;
         }
         .hamster-card {
+            background-color: var(--card-bg);
             overflow: hidden;
             border-radius: 1rem;
-            border: 2px solid #374151;
+            border: 2px solid var(--border-color);
             transition: transform 0.3s, border-color 0.3s;
         }
         .hamster-card:hover {
@@ -46,16 +43,27 @@
             text-decoration: none;
         }
         .back-link:hover {
-            color: #f9fafb;
+            color: var(--text-color);
         }
     </style>
 </head>
 <body>
-    <header style="background-color: rgba(17, 24, 39, 0.9);">
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+    <header>
         <nav class="container">
             <div class="logo" style="color: #ef4444;">Kloggier</div>
             <ul class="nav-links">
-                <li><a href="index.html" style="color: #f9fafb;">Home</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-toggle">
+                        <span id="themeIcon">🌙</span>
+                        <span id="themeText">Dark Mode</span>
+                    </button>
+                </li>
             </ul>
         </nav>
     </header>
@@ -97,5 +105,33 @@
             <p style="color: #ef4444;">They are watching you.</p>
         </div>
     </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        function updateToggleUI() {
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.innerText = '☀️';
+                themeText.innerText = 'Light Mode';
+            } else {
+                themeIcon.innerText = '🌙';
+                themeText.innerText = 'Dark Mode';
+            }
+        }
+
+        updateToggleUI();
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+            updateToggleUI();
+        });
+    </script>
 </body>
 </html>

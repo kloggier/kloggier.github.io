@@ -6,6 +6,46 @@
     --nav-bg: rgba(255, 255, 255, 0.9);
     --font-family: 'Inter', system-ui, -apple-system, sans-serif;
     --container-width: 1100px;
+    --border-color: #e5e7eb;
+}
+
+body.dark-mode {
+    --bg-color: #111827;
+    --text-color: #f9fafb;
+    --card-bg: #1f2937;
+    --nav-bg: rgba(17, 24, 39, 0.9);
+    --border-color: #374151;
+}
+
+/* Toggle Button Style */
+.theme-toggle {
+    background: none;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.theme-toggle:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+body.dark-mode .theme-toggle {
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+body.dark-mode .theme-toggle:hover {
+    background: #fbbf24;
+    color: #111827;
 }
 
 * {
