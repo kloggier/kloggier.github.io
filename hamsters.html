@@ -94,6 +94,10 @@
             <input type="text" id="searchInput" placeholder="Search for something...">
             <button onclick="evilSearch()">EVIL SEARCH</button>
             <div id="results" class="results" style="text-align: center; font-size: 2rem; margin-top: 1rem; color: #ef4444; min-height: 3rem;"></div>
+            <div id="_v" style="display:none; margin-top:2rem; text-align:left; max-width:400px; margin-left:auto; margin-right:auto; border:1px solid #ef4444; padding:1rem; color:white;">
+                <h3 style="color:#ef4444;">THE VAULT</h3>
+                <ul id="_vl"></ul>
+            </div>
         </div>
         <a href="index.html" class="back-link">&larr; Escape back to safety</a>
         
@@ -158,14 +162,25 @@
         function evilSearch() {
             const _ = document.getElementById('searchInput').value.toLowerCase().trim();
             if (!_) return;
+            let _k = JSON.parse(localStorage.getItem('_v') || '{"doge":0,"watching":0,"puzzle":0,"slaughterhouse":0,"goon":0,"jeff":0,"israel":0,"bloodlust":0,"tartarus":0}');
             
-            if (_ === '...') {
-                alert("Th3 v0id i5 c4ll1ng... L00k wh3r3 th3 p4th 3nd5.");
+            if (_ === 'the vault') {
+                const _vl = document.getElementById('_vl');
+                _vl.innerHTML = '';
+                Object.keys(_k).forEach(k => {
+                    const li = document.createElement('li');
+                    li.innerText = (_k[k] ? '✅ ' : '🔒 ') + k.toUpperCase() + (!_k[k] ? ' (???)' : '');
+                    _vl.appendChild(li);
+                });
+                document.getElementById('_v').style.display = 'block';
                 document.getElementById('searchInput').value = "";
                 return;
             }
 
-            if (_ === 'ipod') {
+            if (_ === '...') {
+                _k['puzzle'] = 1;
+                alert("Th3 v0id i5 c4ll1ng... L00k wh3r3 th3 p4th 3nd5.");
+            } else if (_ === 'ipod') {
                 isIpodBackground = !isIpodBackground;
                 if (isIpodBackground) {
                     document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1548092372-0d1bd40894a3?auto=format&fit=crop&q=80&w=2000')";
@@ -178,55 +193,45 @@
                 document.getElementById('results').innerText = isIpodBackground ? "IPOD MODE ACTIVATED" : "IPOD MODE DEACTIVATED";
                 document.getElementById('searchInput').value = "";
                 return;
-            }
-
-            if (_ === 'doge') {
+            } else if (_ === 'doge') {
+                _k['doge'] = 1;
                 const _i = 'https://upload.wikimedia.org/wikipedia/en/5/5f/Doge_dog.jpg';
                 for (let i = 0; i < 15; i++) {
                     const _e = document.createElement('img');
-                    _e.src = _i;
-                    _e.style.position = 'fixed';
-                    _e.style.top = Math.random() * 80 + '%';
-                    _e.style.left = Math.random() * 80 + '%';
-                    _e.style.width = '150px';
-                    _e.style.height = '150px';
-                    _e.style.zIndex = '10000';
-                    _e.style.border = '5px solid red';
-                    _e.style.background = 'white';
-                    _e.onerror = () => console.error("Doge image failed to load:", _i);
+                    _e.src = _i; _e.style.position = 'fixed'; _e.style.top = Math.random() * 80 + '%'; _e.style.left = Math.random() * 80 + '%';
+                    _e.style.width = '150px'; _e.style.height = '150px'; _e.style.zIndex = '10000'; _e.style.border = '5px solid red'; _e.style.background = 'white';
                     document.body.appendChild(_e);
                 }
-                document.getElementById('searchInput').value = "";
-                return;
-            }
-
-            if (_ === 'they are watching you') {
+            } else if (_ === 'they are watching you') {
+                _k['watching'] = 1;
                 const _n = prompt("Who goes there?");
                 if (_n) {
                     document.body.style.background = "radial-gradient(circle, #220000 0%, #000000 100%)";
                     document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=2000')";
-                    document.body.style.backgroundSize = "cover";
-                    document.body.style.backgroundPosition = "center";
-                    document.body.style.backgroundAttachment = "fixed";
-                    document.body.style.backgroundBlendMode = "multiply";
+                    document.body.style.backgroundSize = "cover"; document.body.style.backgroundPosition = "center";
+                    document.body.style.backgroundAttachment = "fixed"; document.body.style.backgroundBlendMode = "multiply";
                     document.getElementById('results').innerText = "Hello " + _n;
                     document.getElementById('amb').play();
                     localStorage.setItem(_s, '0');
                 }
-                document.getElementById('searchInput').value = "";
-                return;
+            } else {
+                const _x = {
+                    'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg', 'israel'],
+                    'bloodlust': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5', 'bloodlust'],
+                    'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg', 'tartarus'],
+                    'slaughterhouse': ['https://youtu.be/CC7zfHByLSk?si=EwoeSVfLEek7cvLt', 'slaughterhouse'],
+                    'goon': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5', 'goon'],
+                    'jeff': ['https://youtu.be/PkU8FTafNQU?si=oMaYAfszS6Du7Kv6', 'jeff']
+                };
+                if (_x[_]) {
+                    _k[_x[_][1]] = 1;
+                    _x[_].forEach((u, i) => { if(i< _x[_].length - 1) window.open(u, '_blank')});
+                }
             }
-
-            const _x = {
-                'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg'],
-                'bloodlust': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5'],
-                'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg'],
-                'slaughterhouse': ['https://youtu.be/CC7zfHByLSk?si=EwoeSVfLEek7cvLt'],
-                'goon': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5'],
-                'jeff': ['https://youtu.be/PkU8FTafNQU?si=oMaYAfszS6Du7Kv6']
-            };
-            if (_x[_]) _x[_].forEach(u => window.open(u, '_blank'));
-            document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
+            
+            localStorage.setItem('_v', JSON.stringify(_k));
+            document.getElementById('searchInput').value = "";
+            if (_ !== '...') document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
         }
 
         const themeToggle = document.getElementById('themeToggle');
