@@ -101,44 +101,8 @@
         const linesElement = document.getElementById('lines');
         const winScreen = document.getElementById('winScreen');
 
-        context.scale(20, 20);
-
         const catImg = new Image();
         catImg.src = 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=100';
-
-        function arenaSweep() {
-            let rowCount = 1;
-            outer: for (let y = arena.length - 1; y > 0; --y) {
-                for (let x = 0; x < arena[y].length; ++x) {
-                    if (arena[y][x] === 0) {
-                        continue outer;
-                    }
-                }
-                const row = arena.splice(y, 1)[0].fill(0);
-                arena.unshift(row);
-                ++y;
-                player.lines += rowCount;
-                linesElement.innerText = player.lines;
-                
-                if (player.lines >= 10) {
-                    winScreen.style.display = 'flex';
-                    cancelAnimationFrame(requestID);
-                }
-            }
-        }
-
-        function collide(arena, player) {
-            const [m, o] = [player.matrix, player.pos];
-            for (let y = 0; y < m.length; ++y) {
-                for (let x = 0; x < m[y].length; ++x) {
-                    if (m[y][x] !== 0 &&
-                       (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
 
         function createArena(w, h) {
             const matrix = [];
@@ -207,10 +171,45 @@
                 row.forEach((value, x) => {
                     if (value !== 0) {
                         // Draw stretched cat image
-                        context.drawImage(catImg, x + offset.x, y + offset.y, 1, 1);
+                        // The scale is 20, so each unit is 20px
+                        context.drawImage(catImg, (x + offset.x) * 20, (y + offset.y) * 20, 20, 20);
                     }
                 });
             });
+        }
+
+        function arenaSweep() {
+            let rowCount = 1;
+            outer: for (let y = arena.length - 1; y > 0; --y) {
+                for (let x = 0; x < arena[y].length; ++x) {
+                    if (arena[y][x] === 0) {
+                        continue outer;
+                    }
+                }
+                const row = arena.splice(y, 1)[0].fill(0);
+                arena.unshift(row);
+                ++y;
+                player.lines += rowCount;
+                linesElement.innerText = player.lines;
+                
+                if (player.lines >= 10) {
+                    winScreen.style.display = 'flex';
+                    isGameOver = true;
+                }
+            }
+        }
+
+        function collide(arena, player) {
+            const [m, o] = [player.matrix, player.pos];
+            for (let y = 0; y < m.length; ++y) {
+                for (let x = 0; x < m[y].length; ++x) {
+                    if (m[y][x] !== 0 &&
+                       (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         function merge(arena, player) {
@@ -243,6 +242,7 @@
         }
 
         function playerDrop() {
+            if (isGameOver) return;
             player.pos.y++;
             if (collide(arena, player)) {
                 player.pos.y--;
@@ -254,6 +254,7 @@
         }
 
         function playerMove(offset) {
+            if (isGameOver) return;
             player.pos.x += offset;
             if (collide(arena, player)) {
                 player.pos.x -= offset;
@@ -275,6 +276,7 @@
         }
 
         function playerRotate(dir) {
+            if (isGameOver) return;
             const pos = player.pos.x;
             let offset = 1;
             rotate(player.matrix, dir);
@@ -291,25 +293,22 @@
 
         let dropCounter = 0;
         let dropInterval = 1000;
-
         let lastTime = 0;
-        let requestID;
-        function update(time = 0) {
-            const deltaTime = time - lastTime;
+        let isGameOver = false;
 
+        function update(time = 0) {
+            if (isGameOver) return;
+            const deltaTime = time - lastTime;
             dropCounter += deltaTime;
             if (dropCounter > dropInterval) {
                 playerDrop();
             }
-
             lastTime = time;
-
             draw();
-            requestID = requestAnimationFrame(update);
+            requestAnimationFrame(update);
         }
 
         const arena = createArena(12, 24);
-
         const player = {
             pos: {x: 0, y: 0},
             matrix: null,
@@ -328,8 +327,10 @@
             }
         });
 
-        playerReset();
-        update();
+        catImg.onload = () => {
+            playerReset();
+            update();
+        };
     </script>
     <script src="dvd.js"></script>
 </body>
