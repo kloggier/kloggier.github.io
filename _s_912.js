@@ -40,16 +40,32 @@ function initTheme() {
     if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add('dark-mode');
     }
-    // Apply active block modifications
+    
+    // Process Blocks
     const activeBlocks = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
     const allBlocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
-    let finalCss = '';
+    
     activeBlocks.forEach(name => {
-        if (allBlocks[name]) finalCss += allBlocks[name] + '\n';
+        const b = allBlocks[name];
+        if (!b) return;
+        if (b.type === 'css') {
+            const style = document.createElement('style');
+            style.innerText = b.value;
+            document.head.appendChild(style);
+        } else if (b.type === 'text') {
+            const div = document.createElement('div');
+            div.innerText = b.value;
+            document.body.appendChild(div);
+        } else if (b.type === 'picture') {
+            const img = document.createElement('img');
+            img.src = b.value;
+            img.style.width = '200px';
+            document.body.appendChild(img);
+        } else if (b.type === 'redirect') {
+            const a = document.createElement('a');
+            a.href = b.value;
+            a.innerText = "External Link";
+            document.body.appendChild(a);
+        }
     });
-    if (finalCss) {
-        const style = document.createElement('style');
-        style.innerText = finalCss;
-        document.head.appendChild(style);
-    }
 }
