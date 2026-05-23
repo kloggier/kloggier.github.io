@@ -133,6 +133,7 @@
 
     <script>
         let isIpodBackground = false;
+
         function evilSearch() {
             const _ = document.getElementById('searchInput').value.toLowerCase().trim();
             if (!_) return;
@@ -148,46 +149,42 @@
                     document.body.style.backgroundImage = "none";
                 }
                 document.getElementById('results').innerText = isIpodBackground ? "IPOD MODE ACTIVATED" : "IPOD MODE DEACTIVATED";
-                function evilSearch() {
-                    const _ = document.getElementById('searchInput').value.toLowerCase().trim();
-                    if (!_) return;
+                document.getElementById('searchInput').value = "";
+                return;
+            }
 
-                    if (_ === 'doge') {
-                        const _i = 'https://upload.wikimedia.org/wikipedia/en/5/5f/Doge_dog.jpg';
-                        for (let i = 0; i < 10; i++) {
-                            const _t = Math.floor(Math.random() * (window.screen.height - 200));
-                            const _l = Math.floor(Math.random() * (window.screen.width - 200));
-                            window.open(_i, '_blank', `width=200,height=200,top=${_t},left=${_l}`);
-                        }
-                        document.getElementById('searchInput').value = "";
-                        return;
-                    }
-
-                    if (_ === 'they are watching you') {
-                        const _n = prompt("Who goes there?");
-                        if (_n) {
-                            document.body.style.background = "radial-gradient(circle, #220000 0%, #000000 100%)";
-                            document.getElementById('results').innerText = "Hello " + _n;
-                            document.getElementById('amb').play();
-                        }
-                        document.getElementById('searchInput').value = "";
-                        return;
-                    }
-
-                    const _x = {
-                        'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg'],
-                        'bloodlust': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5'],
-                        'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg'],
-                        'slaughterhouse': ['https://youtu.be/CC7zfHByLSk?si=EwoeSVfLEek7cvLt'],
-                        'goon': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5'],
-                        'jeff': ['https://youtu.be/PkU8FTafNQU?si=oMaYAfszS6Du7Kv6']
-
-                    };
-                    if (_x[_]) _x[_].forEach(u => window.open(u, '_blank'));
-                    document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
+            if (_ === 'doge') {
+                const _i = 'https://upload.wikimedia.org/wikipedia/en/5/5f/Doge_dog.jpg';
+                for (let i = 0; i < 10; i++) {
+                    const _t = Math.floor(Math.random() * (window.screen.height - 200));
+                    const _l = Math.floor(Math.random() * (window.screen.width - 200));
+                    window.open(_i, '_blank', `width=200,height=200,top=${_t},left=${_l}`);
                 }
+                document.getElementById('searchInput').value = "";
+                return;
+            }
 
+            if (_ === 'they are watching you') {
+                const _n = prompt("Who goes there?");
+                if (_n) {
+                    document.body.style.background = "radial-gradient(circle, #220000 0%, #000000 100%)";
+                    document.getElementById('results').innerText = "Hello " + _n;
+                    document.getElementById('amb').play();
+                }
+                document.getElementById('searchInput').value = "";
+                return;
+            }
 
+            const _x = {
+                'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg'],
+                'bloodlust': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5'],
+                'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg'],
+                'slaughterhouse': ['https://youtu.be/CC7zfHByLSk?si=EwoeSVfLEek7cvLt'],
+                'goon': ['https://youtu.be/V83drEnjV_A?si=aLej9HvKeSAwVXh5'],
+                'jeff': ['https://youtu.be/PkU8FTafNQU?si=oMaYAfszS6Du7Kv6']
+            };
+            if (_x[_]) _x[_].forEach(u => window.open(u, '_blank'));
+            document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
         }
 
         const themeToggle = document.getElementById('themeToggle');
@@ -218,6 +215,5 @@
     </script>
     <script src="dvd.js"></script>
     <script src="music.js"></script>
-    <script src="hacker.js"></script>
 </body>
 </html>
