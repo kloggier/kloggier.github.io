@@ -147,19 +147,32 @@
                     document.body.style.backgroundImage = "none";
                 }
                 document.getElementById('results').innerText = isIpodBackground ? "IPOD MODE ACTIVATED" : "IPOD MODE DEACTIVATED";
-                document.getElementById('searchInput').value = "";
-                return;
-            }
+                function evilSearch() {
+                    const _ = document.getElementById('searchInput').value.toLowerCase().trim();
+                    if (!_) return;
 
-            const _x = {
-                'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg'],
-                'bloodlust': ['https://www.youtube.com/watch?v=1bK1-P6T_Zg'],
-                'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg'],
-                'slaughterhouse': ['https://www.youtube.com/watch?v=uK48154Zz9k'],
-                'goon': ['https://www.youtube.com/watch?v=t5Q3M7N-h1Q']
-            };
-            if (_x[_]) _x[_].forEach(u => window.open(u, '_blank'));
-            document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
+                    if (_ === 'doge') {
+                        const _i = 'https://upload.wikimedia.org/wikipedia/en/5/5f/Doge_dog.jpg';
+                        for (let i = 0; i < 10; i++) {
+                            const _t = Math.floor(Math.random() * (window.screen.height - 200));
+                            const _l = Math.floor(Math.random() * (window.screen.width - 200));
+                            window.open(_i, '_blank', `width=200,height=200,top=${_t},left=${_l}`);
+                        }
+                        document.getElementById('searchInput').value = "";
+                        return;
+                    }
+
+                    const _x = {
+                        'israel': ['https://www.youtube.com/watch?v=kYJj-9p7l90', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Benjamin_Netanyahu_2018.jpg/220px-Benjamin_Netanyahu_2018.jpg'],
+                        'bloodlust': ['https://www.youtube.com/watch?v=1bK1-P6T_Zg'],
+                        'tartarus': ['https://www.youtube.com/watch?v=3-M9o1G52Gg'],
+                        'slaughterhouse': ['https://www.youtube.com/watch?v=uK48154Zz9k'],
+                        'goon': ['https://www.youtube.com/watch?v=t5Q3M7N-h1Q']
+                    };
+                    if (_x[_]) _x[_].forEach(u => window.open(u, '_blank'));
+                    document.getElementById('results').innerText = _.toUpperCase() + " BUT EVIL";
+                }
+
         }
 
         const themeToggle = document.getElementById('themeToggle');
