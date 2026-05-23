@@ -168,6 +168,11 @@
                 const _n = prompt("Who goes there?");
                 if (_n) {
                     document.body.style.background = "radial-gradient(circle, #220000 0%, #000000 100%)";
+                    document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=2000')";
+                    document.body.style.backgroundSize = "cover";
+                    document.body.style.backgroundPosition = "center";
+                    document.body.style.backgroundAttachment = "fixed";
+                    document.body.style.backgroundBlendMode = "multiply";
                     document.getElementById('results').innerText = "Hello " + _n;
                     document.getElementById('amb').play();
                 }
