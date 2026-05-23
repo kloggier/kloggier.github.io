@@ -190,9 +190,6 @@
         dvdLogo.style.top = y + 'px';
 
         requestAnimationFrame(update);
-        }
-
-        requestAnimationFrame(update);
     }
 
     function changeColor() {
