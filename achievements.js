@@ -17,8 +17,13 @@ function unlock(id) {
 }
 
 function getVaultData() {
-    return {
-        state: JSON.parse(localStorage.getItem('_v') || '{}'),
-        ach: _ach
-    };
+    try {
+        return {
+            state: JSON.parse(localStorage.getItem('_v') || '{}'),
+            ach: _ach
+        };
+    } catch (e) {
+        console.error("Vault data corrupted:", e);
+        return { state: {}, ach: _ach };
+    }
 }
