@@ -107,8 +107,14 @@
         }
 
         function showVault() {
+            console.log("showVault called");
             const _d = getVaultData();
+            console.log("Vault data:", _d);
             const _vl = document.getElementById('_vl');
+            const _v = document.getElementById('_v');
+            if (!_vl) { console.error("Element _vl not found!"); return; }
+            if (!_v) { console.error("Element _v not found!"); return; }
+            
             _vl.innerHTML = '';
             Object.keys(_d.ach).forEach(k => {
                 const a = _d.ach[k];
@@ -117,7 +123,8 @@
                 li.innerText = (_d.state[a.id] ? '✅ ' : '🔒 ') + a.label + (!_d.state[a.id] ? ' (Hint: ' + a.hint + ')' : '');
                 _vl.appendChild(li);
             });
-            document.getElementById('_v').style.display = 'block';
+            _v.style.display = 'block';
+            console.log("Vault UI should be visible now");
         }
 
         let isIpodBackground = false;
@@ -126,6 +133,7 @@
             if (!_) return;
             
             if (_ === 'the vault') {
+                console.log("Triggering vault...");
                 showVault();
                 document.getElementById('searchInput').value = "";
                 return;
