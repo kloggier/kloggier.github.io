@@ -47,7 +47,12 @@
             <input type="text" id="searchInput" placeholder="Search for something...">
             <button onclick="evilSearch()">EVIL SEARCH</button>
             <div id="results" class="results" style="text-align: center; font-size: 2rem; margin-top: 1rem; color: #ef4444; min-height: 3rem;"></div>
-            <div id="_v_container"></div>
+            <div id="_v_container">
+                <div id="_v" style="display:none; margin-top:2rem; text-align:left; max-width:400px; margin-left:auto; margin-right:auto; border:1px solid #ef4444; padding:1rem; color:white; background:black;">
+                    <h3 style="color:#ef4444; text-align:center;">THE VAULT</h3>
+                    <ul id="_vl" style="list-style:none; padding:0;"></ul>
+                </div>
+            </div>
         </div>
         <a href="index.html" class="back-link">&larr; Escape back to safety</a>
         
@@ -121,18 +126,7 @@
             if (!_) return;
             
             if (_ === 'the vault') {
-                const _vContainer = document.getElementById('_v_container');
-                if(!document.getElementById('_v')) {
-                    fetch('_v_9381.html')
-                        .then(r => r.text())
-                        .then(t => {
-                            _vContainer.innerHTML = t;
-                            showVault();
-                        })
-                        .catch(e => console.error("Vault failed to load:", e));
-                } else {
-                    showVault();
-                }
+                showVault();
                 document.getElementById('searchInput').value = "";
                 return;
             }
