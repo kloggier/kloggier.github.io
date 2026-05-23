@@ -1,10 +1,16 @@
 const dvdLogo = document.createElement('div');
 dvdLogo.id = 'dvd-logo';
+// A more "iconic" DVD Video logo SVG
 dvdLogo.innerHTML = `
-<svg width="100" height="45" viewBox="0 0 100 45" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12.5 5.5C10.5 5.5 8.5 6.5 7.5 8.5C6.5 10.5 6.5 13.5 7.5 15.5C8.5 17.5 10.5 18.5 12.5 18.5H16.5V5.5H12.5ZM28.5 5.5H20.5V18.5H24.5V26.5L32.5 5.5H28.5ZM44.5 5.5C42.5 5.5 40.5 6.5 39.5 8.5C38.5 10.5 38.5 13.5 39.5 15.5C40.5 17.5 42.5 18.5 44.5 18.5H48.5V5.5H44.5ZM12.5 9.5H12.5C11.5 9.5 11.5 10.5 10.5 11.5C10.5 12.5 10.5 13.5 10.5 14.5C11.5 15.5 11.5 16.5 12.5 16.5H12.5V9.5ZM44.5 9.5H44.5C43.5 9.5 43.5 10.5 42.5 11.5C42.5 12.5 42.5 13.5 42.5 14.5C43.5 15.5 43.5 16.5 44.5 16.5H44.5V9.5ZM56.5 5.5H52.5V18.5H56.5C58.5 18.5 60.5 17.5 61.5 15.5C62.5 13.5 62.5 10.5 61.5 8.5C60.5 6.5 58.5 5.5 56.5 5.5ZM56.5 9.5C57.5 9.5 57.5 10.5 58.5 11.5C58.5 12.5 58.5 13.5 58.5 14.5C57.5 15.5 57.5 16.5 56.5 16.5H56.5V9.5Z" fill="currentColor"/>
-    <ellipse cx="50" cy="35" rx="45" ry="10" fill="none" stroke="currentColor" stroke-width="2"/>
-    <text x="50" y="38" font-family="Arial" font-size="8" text-anchor="middle" fill="currentColor">VIDEO</text>
+<svg width="120" height="54" viewBox="0 0 120 54" xmlns="http://www.w3.org/2000/svg">
+    <g fill="currentColor">
+        <path d="M22.2,7.4c-4.4,0-8.2,1.5-10.7,4.1c-2.5,2.6-3.8,6.2-3.8,10.2c0,3.9,1.3,7.5,3.8,10.1c2.5,2.6,6.3,4.1,10.7,4.1h7.3V7.4H22.2z M22.2,31.7c-2.8,0-5.1-0.9-6.6-2.5c-1.5-1.6-2.3-3.8-2.3-6.5c0-2.7,0.8-4.9,2.3-6.5c1.5-1.6,3.8-2.5,6.6-2.5h2.9v18H22.2z"/>
+        <path d="M48.2,7.4l-5.3,13.4l-5.3-13.4h-5.4l8.3,20.1l-2.4,5.8l-0.1,0.2H42l8.3-20.1H48.2z"/>
+        <path d="M68.5,7.4c-4.4,0-8.2,1.5-10.7,4.1c-2.5,2.6-3.8,6.2-3.8,10.2c0,3.9,1.3,7.5,3.8,10.1c2.5,2.6,6.3,4.1,10.7,4.1h7.3V7.4H68.5z M68.5,31.7c-2.8,0-5.1-0.9-6.6-2.5c-1.5-1.6-2.3-3.8-2.3-6.5c0-2.7,0.8-4.9,2.3-6.5c1.5-1.6,3.8-2.5,6.6-2.5h2.9v18H68.5z"/>
+        <path d="M12.5,45.1c-1.8,0-3.3,0.3-4.4,0.8c-1.1,0.5-1.7,1.1-1.7,1.7c0,1.3,2.7,2.4,6.1,2.4c3.4,0,6.1-1.1,6.1-2.4c0-0.6-0.6-1.2-1.7-1.7C15.8,45.4,14.3,45.1,12.5,45.1z" transform="scale(3.5, 0.8) translate(-6, 0)"/>
+    </g>
+    <text x="60" y="50" font-family="Arial, sans-serif" font-size="9" font-weight="bold" text-anchor="middle" fill="currentColor" letter-spacing="4">VIDEO</text>
+    <ellipse cx="60" cy="48" rx="55" ry="5" fill="none" stroke="currentColor" stroke-width="1.5"/>
 </svg>
 `;
 
@@ -14,12 +20,13 @@ const styles = `
 #dvd-logo {
     position: fixed;
     z-index: 9999;
-    width: 100px;
-    height: 45px;
+    width: 120px;
+    height: 54px;
     pointer-events: auto;
-    opacity: 0.5;
+    opacity: 0.8; /* Increased visibility */
     transition: opacity 0.5s ease;
     color: #ff0000;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); /* Make it pop */
 }
 #dvd-logo:hover {
     opacity: 0;
@@ -30,23 +37,23 @@ const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
-let x = Math.random() * (window.innerWidth - 100);
-let y = Math.random() * (window.innerHeight - 45);
-let dx = 2;
-let dy = 2;
+let x = Math.random() * (window.innerWidth - 120);
+let y = Math.random() * (window.innerHeight - 54);
+let dx = 1.5; // Slightly slower for better visibility
+let dy = 1.5;
 
-const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
+const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ffffff'];
 let colorIndex = 0;
 
 function update() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    if (x + 100 >= width || x <= 0) {
+    if (x + 120 >= width || x <= 0) {
         dx = -dx;
         changeColor();
     }
-    if (y + 45 >= height || y <= 0) {
+    if (y + 54 >= height || y <= 0) {
         dy = -dy;
         changeColor();
     }
@@ -68,6 +75,6 @@ function changeColor() {
 update();
 
 window.addEventListener('resize', () => {
-    x = Math.min(x, window.innerWidth - 100);
-    y = Math.min(y, window.innerHeight - 45);
+    x = Math.min(x, window.innerWidth - 120);
+    y = Math.min(y, window.innerHeight - 54);
 });
