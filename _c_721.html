@@ -3,76 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>SITE CREATOR</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="_s_912.js"></script>
     <style>
-        body { background: #111; color: white; display: flex; flex-direction: column; align-items: center; padding: 2rem; font-family: monospace; }
-        .box { border: 1px solid white; padding: 1rem; margin: 1rem; width: 400px; }
-        .block-btn { display: block; margin: 5px 0; width: 100%; padding: 5px; cursor: pointer; }
+        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; background: #222; color: #fff; }
+        .pane { padding: 1rem; border: 1px solid #444; }
+        #palette { width: 20%; background: #333; }
+        #workspace { width: 40%; background: #444; overflow-y: auto; }
+        #stage { width: 40%; background: white; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .block { background: #555; padding: 10px; margin: 5px; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <h1>SITE CREATOR</h1>
-    <div class="box">
-        <h3>Programmer Mode (Define Block)</h3>
-        <input type="text" id="bName" placeholder="Name">
-        <select id="bType">
-            <option value="css">CSS</option>
-            <option value="text">Text</option>
-            <option value="picture">Picture</option>
-            <option value="redirect">Redirect</option>
-        </select>
-        <input type="text" id="bVal" placeholder="Value (URL/CSS/Text)">
-        <button onclick="saveBlock()">Save Custom Block</button>
+    <div id="palette" class="pane">
+        <h3>Palette</h3>
+        <div class="block" onclick="addBlock('text', 'Hello World')">Text</div>
+        <div class="block" onclick="addBlock('picture', 'https://i.imgur.com/2sL7OqW.jpg')">Picture</div>
+        <div class="block" onclick="addBlock('css', 'body { background: #300 !important; }')">Red BG</div>
     </div>
-    <div class="box">
-        <h3>Simple Mode (Add Presets)</h3>
-        <div id="blockList"></div>
-        <button onclick="clearBlocks()" style="margin-top:10px;">Clear Active</button>
+    <div id="workspace" class="pane">
+        <h3>Workspace</h3>
+        <div id="stack"></div>
+        <button onclick="clearBlocks()">Clear</button>
     </div>
-    <a href="hamsters.html" style="color:gray;">Return</a>
+    <div id="stage" class="pane">
+        <iframe id="preview"></iframe>
+    </div>
 
     <script>
-        function saveBlock() {
-            const name = document.getElementById('bName').value;
-            const type = document.getElementById('bType').value;
-            const val = document.getElementById('bVal').value;
-            let blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
-            blocks[name] = {type, value: val};
-            localStorage.setItem('_blocks', JSON.stringify(blocks));
-            location.reload();
-        }
-        function applyBlock(name) {
+        function addBlock(type, value) {
             let active = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
-            active.push(name);
+            let blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
+            let id = 'b' + Date.now();
+            blocks[id] = {type, value};
+            active.push(id);
+            localStorage.setItem('_blocks', JSON.stringify(blocks));
             localStorage.setItem('_activeBlocks', JSON.stringify(active));
-            location.reload();
+            updatePreview();
         }
+
         function clearBlocks() {
             localStorage.setItem('_activeBlocks', '[]');
-            location.reload();
+            updatePreview();
         }
-        
-        const list = document.getElementById('blockList');
-        
-        // Add Presets
-        Object.keys(_presets).forEach(name => {
-            const btn = document.createElement('button');
-            btn.className = 'block-btn';
-            btn.innerText = name + " (Preset)";
-            btn.onclick = () => applyBlock(name);
-            list.appendChild(btn);
-        });
 
-        // Add Custom Blocks
-        const allBlocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
-        Object.keys(allBlocks).forEach(name => {
-            const btn = document.createElement('button');
-            btn.className = 'block-btn';
-            btn.innerText = name + " (" + allBlocks[name].type + ")";
-            btn.onclick = () => applyBlock(name);
-            list.appendChild(btn);
-        });
+        function updatePreview() {
+            const preview = document.getElementById('preview');
+            preview.srcdoc = `
+                <html>
+                <head><style>${getPreviewCss()}</style></head>
+                <body>${getPreviewHtml()}</body>
+                </html>
+            `;
+            const stack = document.getElementById('stack');
+            stack.innerHTML = JSON.parse(localStorage.getItem('_activeBlocks') || '[]').map(id => `<div class="block">${id}</div>`).join('');
+        }
+
+        function getPreviewCss() {
+            let css = '';
+            const active = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
+            const blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
+            active.forEach(id => { if(blocks[id] && blocks[id].type === 'css') css += blocks[id].value; });
+            return css;
+        }
+
+        function getPreviewHtml() {
+            let html = '';
+            const active = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
+            const blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
+            active.forEach(id => { 
+                const b = blocks[id];
+                if (!b) return;
+                if (b.type === 'text') html += `<div>${b.value}</div>`;
+                else if (b.type === 'picture') html += `<img src="${b.value}" width="100">`;
+            });
+            return html;
+        }
+
+        updatePreview();
     </script>
 </body>
 </html>
