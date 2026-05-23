@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>THE VAULT</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .vault-container { border: 1px solid #ef4444; padding: 2rem; max-width: 400px; width: 100%; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="vault-container">
+        <h3 style="color:#ef4444; text-align:center;">THE VAULT</h3>
+        <ul id="_vl" style="list-style:none; padding:0;"></ul>
+        <a href="hamsters.html" style="color:gray; display:block; margin-top:1rem;">Back</a>
+    </div>
+
+    <script>
+        const _ach = {
+            'e1': { id: 'e1', hint: "Man's best friend, but inverted", label: 'Doge' },
+            'e2': { id: 'e2', hint: 'The gaze that persists', label: 'Watcher' },
+            'e3': { id: 'e3', hint: '...', label: 'Void' },
+            'e4': { id: 'e4', hint: 'The factory of meat', label: 'Slaughterhouse' },
+            'e5': { id: 'e5', hint: 'The bloodline', label: 'Bloodlust' },
+            'h1': { id: 'h1', hint: 'Look to the footer', label: 'Observer' },
+            'h2': { id: 'h2', hint: 'Find the 1px ghost', label: 'Ghost' },
+            'h3': { id: 'h3', hint: 'Speed is key', label: 'Speed' },
+            'hidden': { id: 'hidden', hint: '???', label: 'Secret' }
+        };
+
+        function getVaultData() {
+            try {
+                return {
+                    state: JSON.parse(localStorage.getItem('_v') || '{}'),
+                    ach: _ach
+                };
+            } catch (e) {
+                return { state: {}, ach: _ach };
+            }
+        }
+
+        const _d = getVaultData();
+        const _vl = document.getElementById('_vl');
+        Object.keys(_d.ach).forEach(k => {
+            const a = _d.ach[k];
+            if (a.id === 'hidden' && !_d.state[a.id]) return;
+            const li = document.createElement('li');
+            li.innerText = (_d.state[a.id] ? '✅ ' : '🔒 ') + a.label + (!_d.state[a.id] ? ' (Hint: ' + a.hint + ')' : '');
+            _vl.appendChild(li);
+        });
+    </script>
+</body>
+</html>

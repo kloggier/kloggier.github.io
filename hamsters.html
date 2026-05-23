@@ -47,12 +47,6 @@
             <input type="text" id="searchInput" placeholder="Search for something...">
             <button onclick="evilSearch()">EVIL SEARCH</button>
             <div id="results" class="results" style="text-align: center; font-size: 2rem; margin-top: 1rem; color: #ef4444; min-height: 3rem;"></div>
-            <div id="_v_container">
-                <div id="_v" style="display:none; margin-top:2rem; text-align:left; max-width:400px; margin-left:auto; margin-right:auto; border:1px solid #ef4444; padding:1rem; color:white; background:black;">
-                    <h3 style="color:#ef4444; text-align:center;">THE VAULT</h3>
-                    <ul id="_vl" style="list-style:none; padding:0;"></ul>
-                </div>
-            </div>
         </div>
         <a href="index.html" class="back-link">&larr; Escape back to safety</a>
         
@@ -136,13 +130,6 @@
             }
         }
 
-        function showVault() {
-            console.log("showVault called");
-            const _d = getVaultData();
-            console.log("Vault data:", _d);
-            const _vl = document.getElementById('_vl');
-            const _v = document.getElementById('_v');
-            if (!_vl) { console.error("Element _vl not found!"); return; }
             if (!_v) { console.error("Element _v not found!"); return; }
             
             _vl.innerHTML = '';
@@ -163,9 +150,7 @@
             if (!_) return;
             
             if (_ === 'the vault') {
-                console.log("Triggering vault...");
-                showVault();
-                document.getElementById('searchInput').value = "";
+                window.location.href = '_v_9381.html';
                 return;
             }
 
