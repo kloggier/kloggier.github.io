@@ -40,10 +40,16 @@ function initTheme() {
     if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add('dark-mode');
     }
-    const cssMod = localStorage.getItem('_css');
-    if (cssMod) {
+    // Apply active block modifications
+    const activeBlocks = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
+    const allBlocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
+    let finalCss = '';
+    activeBlocks.forEach(name => {
+        if (allBlocks[name]) finalCss += allBlocks[name] + '\n';
+    });
+    if (finalCss) {
         const style = document.createElement('style');
-        style.innerText = cssMod;
+        style.innerText = finalCss;
         document.head.appendChild(style);
     }
 }

@@ -6,35 +6,53 @@
     <link rel="stylesheet" href="style.css">
     <script src="_s_912.js"></script>
     <style>
-        body { background: #111; color: white; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
-        .mode-box { border: 1px solid white; padding: 1rem; margin: 1rem; width: 400px; }
+        body { background: #111; color: white; display: flex; flex-direction: column; align-items: center; padding: 2rem; font-family: monospace; }
+        .box { border: 1px solid white; padding: 1rem; margin: 1rem; width: 400px; }
     </style>
 </head>
 <body>
     <h1>SITE CREATOR</h1>
-    <div class="mode-box">
-        <h3>Simple Mode</h3>
-        <input type="color" id="bgCol" onchange="applySimple()">
+    <div class="box">
+        <h3>Programmer Mode (Define Block)</h3>
+        <input type="text" id="bName" placeholder="Block Name (e.g., RedBg)">
+        <textarea id="bCss" style="width:100%; height:80px;" placeholder="CSS (e.g., body { background: red !important; })"></textarea>
+        <button onclick="saveBlock()">Save Block</button>
     </div>
-    <div class="mode-box">
-        <h3>Programmer Mode</h3>
-        <textarea id="cssCode" style="width:100%; height:100px;"></textarea>
-        <button onclick="applyPro()">Apply</button>
+    <div class="box">
+        <h3>Simple Mode (Apply Block)</h3>
+        <div id="blockList"></div>
+        <button onclick="clearBlocks()" style="margin-top:10px;">Clear Active</button>
     </div>
     <a href="hamsters.html" style="color:gray;">Return</a>
 
     <script>
-        function applySimple() {
-            const col = document.getElementById('bgCol').value;
-            const css = `body { background-color: ${col} !important; }`;
-            localStorage.setItem('_css', css);
+        function saveBlock() {
+            const name = document.getElementById('bName').value;
+            const css = document.getElementById('bCss').value;
+            let blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
+            blocks[name] = css;
+            localStorage.setItem('_blocks', JSON.stringify(blocks));
             location.reload();
         }
-        function applyPro() {
-            const css = document.getElementById('cssCode').value;
-            localStorage.setItem('_css', css);
+        function applyBlock(name) {
+            let active = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
+            active.push(name);
+            localStorage.setItem('_activeBlocks', JSON.stringify(active));
             location.reload();
         }
+        function clearBlocks() {
+            localStorage.setItem('_activeBlocks', '[]');
+            location.reload();
+        }
+        
+        const allBlocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
+        const list = document.getElementById('blockList');
+        Object.keys(allBlocks).forEach(name => {
+            const btn = document.createElement('button');
+            btn.innerText = name;
+            btn.onclick = () => applyBlock(name);
+            list.appendChild(btn);
+        });
     </script>
 </body>
 </html>
