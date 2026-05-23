@@ -1,4 +1,5 @@
 (function() {
+    window.dvdClickable = false;
     const dvdLogo = document.createElement('div');
     dvdLogo.id = 'dvd-logo';
     dvdLogo.innerHTML = `
@@ -15,6 +16,12 @@
     `;
 
     document.body.appendChild(dvdLogo);
+
+    dvdLogo.addEventListener('click', () => {
+        if (window.dvdClickable) {
+            window.location.href = 'tictactoe.html';
+        }
+    });
 
     const toggleBtn = document.createElement('button');
     toggleBtn.id = 'dvd-toggle';
@@ -112,16 +119,14 @@
 
     toggleBtn.addEventListener('click', () => {
         if (isDvdEnabled) {
-            // Easy Captcha to Disable
             const a = Math.floor(Math.random() * 20);
             const b = Math.floor(Math.random() * 20);
             captchaSolution = a + b;
             document.getElementById('captcha-title').innerText = 'Solve to Disable DVD';
             document.getElementById('captcha-question').innerText = `What is ${a} + ${b}?`;
         } else {
-            // Hard Captcha to Enable
-            const a = Math.floor(Math.random() * 15) + 11; // 11-25
-            const b = Math.floor(Math.random() * 15) + 11; // 11-25
+            const a = Math.floor(Math.random() * 15) + 11;
+            const b = Math.floor(Math.random() * 15) + 11;
             captchaSolution = a * b;
             document.getElementById('captcha-title').innerText = 'Solve to Enable DVD (Hard Mode)';
             document.getElementById('captcha-question').innerText = `What is ${a} × ${b}?`;
@@ -138,7 +143,7 @@
                 dvdLogo.style.display = 'block';
                 toggleBtn.innerText = 'Disable DVD';
                 toggleBtn.style.background = '#ef4444';
-                update(); // Restart loop if it stopped
+                update();
             } else {
                 dvdLogo.style.display = 'none';
                 toggleBtn.innerText = 'Enable DVD';

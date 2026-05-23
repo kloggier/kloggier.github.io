@@ -17,6 +17,17 @@ body.dark-mode {
     --border-color: #374151;
 }
 
+body.hell-mode {
+    --bg-color: #200;
+    --text-color: #f00;
+    --card-bg: #400;
+    --nav-bg: #100;
+    --border-color: #600;
+    background-image: url('https://images.unsplash.com/photo-1542273917-63519c72e21e?auto=format&fit=crop&q=80&w=2000');
+    background-size: cover;
+    background-blend-mode: multiply;
+}
+
 /* Toggle Button Style */
 .theme-toggle {
     background: none;
