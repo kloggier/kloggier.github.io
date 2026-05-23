@@ -151,10 +151,7 @@
                 }
             // Watching
             if (query === 'who is watching me?') {
-                window.dvdClickable = true;
-                const dvdLogo = document.getElementById('dvd-logo');
-                if (dvdLogo) dvdLogo.classList.add('is-clickable');
-                document.getElementById('results').innerText = "THE DVD IS WATCHING...";
+                document.getElementById('results').innerText = "i am watching you";
                 document.getElementById('searchInput').value = "";
                 return;
             }
