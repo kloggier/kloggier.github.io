@@ -2,84 +2,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SITE CREATOR</title>
+    <title>SITE CREATOR PRO</title>
     <style>
-        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; background: #222; color: #fff; }
-        .pane { padding: 1rem; border: 1px solid #444; }
-        #palette { width: 20%; background: #333; }
-        #workspace { width: 40%; background: #444; overflow-y: auto; }
+        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; background: #1a1a1a; color: #fff; }
+        .pane { padding: 10px; border: 1px solid #333; overflow-y: auto; }
+        #palette { width: 15%; background: #222; }
+        #workspace { width: 45%; background: #2c2c2c; }
         #stage { width: 40%; background: white; }
+        .block { background: #444; padding: 10px; margin: 5px; cursor: grab; border: 1px solid #666; border-radius: 4px; }
+        .block.dragging { opacity: 0.5; }
         iframe { width: 100%; height: 100%; border: none; }
-        .block { background: #555; padding: 10px; margin: 5px; cursor: pointer; border-radius: 5px; }
+        .config-btn { font-size: 10px; cursor: pointer; float: right; }
     </style>
 </head>
 <body>
     <div id="palette" class="pane">
         <h3>Palette</h3>
-        <div class="block" onclick="addBlock('text', 'Hello World')">Text</div>
-        <div class="block" onclick="addBlock('picture', 'https://i.imgur.com/2sL7OqW.jpg')">Picture</div>
-        <div class="block" onclick="addBlock('css', 'body { background: #300 !important; }')">Red BG</div>
+        <div class="block" draggable="true" ondragstart="drag(event)" data-type="text">Text Block</div>
+        <div class="block" draggable="true" ondragstart="drag(event)" data-type="picture">Picture Block</div>
+        <div class="block" draggable="true" ondragstart="drag(event)" data-type="redirect">Redirect Block</div>
     </div>
-    <div id="workspace" class="pane">
+    <div id="workspace" class="pane" ondrop="drop(event)" ondragover="allowDrop(event)">
         <h3>Workspace</h3>
         <div id="stack"></div>
         <button onclick="clearBlocks()">Clear</button>
+        <button onclick="exportHtml()">Convert to HTML</button>
     </div>
     <div id="stage" class="pane">
         <iframe id="preview"></iframe>
     </div>
 
     <script>
-        function addBlock(type, value) {
-            let active = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
-            let blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
-            let id = 'b' + Date.now();
-            blocks[id] = {type, value};
-            active.push(id);
-            localStorage.setItem('_blocks', JSON.stringify(blocks));
-            localStorage.setItem('_activeBlocks', JSON.stringify(active));
+        let _st = JSON.parse(localStorage.getItem('_st') || '[]');
+        let _d = JSON.parse(localStorage.getItem('_d') || '{}');
+
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("type", ev.target.dataset.type); }
+        function drop(ev) {
+            ev.preventDefault();
+            const type = ev.dataTransfer.getData("type");
+            const id = 'b' + Date.now();
+            _st.push(id);
+            _d[id] = { type, text: 'New ' + type, url: '', css: '' };
+            save();
+            render();
+        }
+
+        function save() {
+            localStorage.setItem('_st', JSON.stringify(_st));
+            localStorage.setItem('_d', JSON.stringify(_d));
             updatePreview();
         }
 
-        function clearBlocks() {
-            localStorage.setItem('_activeBlocks', '[]');
-            updatePreview();
+        function edit(id) {
+            const b = _d[id];
+            const t = prompt("Text/Value:", b.text);
+            const u = prompt("URL/CSS (if applicable):", b.url);
+            if(t !== null) b.text = t;
+            if(u !== null) b.url = u;
+            save(); render();
+        }
+
+        function render() {
+            const s = document.getElementById('stack');
+            s.innerHTML = '';
+            _st.forEach(id => {
+                const b = _d[id];
+                const el = document.createElement('div');
+                el.className = 'block';
+                el.innerHTML = `${b.text} <button class="config-btn" onclick="edit('${id}')">Edit</button>`;
+                s.appendChild(el);
+            });
         }
 
         function updatePreview() {
-            const preview = document.getElementById('preview');
-            preview.srcdoc = `
-                <html>
-                <head><style>${getPreviewCss()}</style></head>
-                <body>${getPreviewHtml()}</body>
-                </html>
-            `;
-            const stack = document.getElementById('stack');
-            stack.innerHTML = JSON.parse(localStorage.getItem('_activeBlocks') || '[]').map(id => `<div class="block">${id}</div>`).join('');
-        }
-
-        function getPreviewCss() {
-            let css = '';
-            const active = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
-            const blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
-            active.forEach(id => { if(blocks[id] && blocks[id].type === 'css') css += blocks[id].value; });
-            return css;
-        }
-
-        function getPreviewHtml() {
-            let html = '';
-            const active = JSON.parse(localStorage.getItem('_activeBlocks') || '[]');
-            const blocks = JSON.parse(localStorage.getItem('_blocks') || '{}');
-            active.forEach(id => { 
-                const b = blocks[id];
-                if (!b) return;
-                if (b.type === 'text') html += `<div>${b.value}</div>`;
-                else if (b.type === 'picture') html += `<img src="${b.value}" width="100">`;
+            const p = document.getElementById('preview');
+            let h = '<html><body>';
+            _st.forEach(id => {
+                const b = _d[id];
+                if(b.type === 'text') h += `<div style="${b.url}">${b.text}</div>`;
+                if(b.type === 'picture') h += `<img src="${b.text}" width="100">`;
+                if(b.type === 'redirect') h += `<a href="${b.url}">${b.text}</a><br>`;
             });
-            return html;
+            p.srcdoc = h + '</body></html>';
         }
 
-        updatePreview();
+        function exportHtml() {
+            const p = document.getElementById('preview').srcdoc;
+            const blob = new Blob([p], {type: 'text/html'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'site.html';
+            a.click();
+        }
+
+        render(); updatePreview();
     </script>
 </body>
 </html>
