@@ -80,7 +80,34 @@
 
     <script src="achievements.js"></script>
     <script>
+        // Move achievement-related state and helper functions to top-level scope
         const _s = '_p';
+        
+        // Ensure unlock function exists globally
+        if (typeof unlock !== 'function') {
+            function unlock(id) {
+                let k = JSON.parse(localStorage.getItem('_v') || '{}');
+                k[id] = 1;
+                localStorage.setItem('_v', JSON.stringify(k));
+            }
+        }
+        
+        // Ensure getVaultData exists globally
+        if (typeof getVaultData !== 'function') {
+            function getVaultData() {
+                try {
+                    return {
+                        state: JSON.parse(localStorage.getItem('_v') || '{}'),
+                        ach: _ach // Assuming _ach is in achievements.js
+                    };
+                } catch (e) {
+                    console.error("Vault data corrupted:", e);
+                    return { state: {}, ach: {} };
+                }
+            }
+        }
+        
+        // ... rest of script
         if(window.location.href.includes('theyshallgoon')) localStorage.removeItem(_s);
         
         if(localStorage.getItem(_s) === '1') {
