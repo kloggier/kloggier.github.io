@@ -179,12 +179,18 @@
             };
             
             if (_ === 'the vault') {
+                const _vContainer = document.getElementById('_v_container');
                 if(!document.getElementById('_v')) {
-                    fetch('_v_9381.html').then(r=>r.text()).then(t=>{
-                        document.getElementById('_v_container').innerHTML = t;
-                        showVault(_k);
-                    });
-                } else showVault(_k);
+                    fetch('_v_9381.html')
+                        .then(r => r.text())
+                        .then(t => {
+                            _vContainer.innerHTML = t;
+                            showVault(_k);
+                        })
+                        .catch(e => console.error("Vault failed to load:", e));
+                } else {
+                    showVault(_k);
+                }
                 document.getElementById('searchInput').value = "";
                 return;
             }
