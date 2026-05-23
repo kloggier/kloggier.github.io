@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SITE CREATOR</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="_s_912.js"></script>
+    <style>
+        body { background: #111; color: white; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
+        .mode-box { border: 1px solid white; padding: 1rem; margin: 1rem; width: 400px; }
+    </style>
+</head>
+<body>
+    <h1>SITE CREATOR</h1>
+    <div class="mode-box">
+        <h3>Simple Mode</h3>
+        <input type="color" id="bgCol" onchange="applySimple()">
+    </div>
+    <div class="mode-box">
+        <h3>Programmer Mode</h3>
+        <textarea id="cssCode" style="width:100%; height:100px;"></textarea>
+        <button onclick="applyPro()">Apply</button>
+    </div>
+    <a href="hamsters.html" style="color:gray;">Return</a>
+
+    <script>
+        function applySimple() {
+            const col = document.getElementById('bgCol').value;
+            const css = `body { background-color: ${col} !important; }`;
+            localStorage.setItem('_css', css);
+            location.reload();
+        }
+        function applyPro() {
+            const css = document.getElementById('cssCode').value;
+            localStorage.setItem('_css', css);
+            location.reload();
+        }
+    </script>
+</body>
+</html>

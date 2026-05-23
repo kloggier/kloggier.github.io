@@ -1,5 +1,42 @@
-<div style="background:black; color:red; padding:2rem; font-family:monospace; height:100vh;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BLACK MARKET</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="_s_912.js"></script>
+    <style>
+        body { background: black; color: #ef4444; font-family: monospace; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
+        .item { border: 1px solid red; padding: 1rem; margin: 1rem; width: 300px; text-align: center; }
+    </style>
+</head>
+<body>
     <h1>BLACK MARKET</h1>
-    <p>...hidden goods...</p>
+    <p>Coins: <span id="_coins">0</span></p>
+    <div class="item">
+        <p>Uncanny Filter (20 coins)</p>
+        <button onclick="buy('filter')">Buy</button>
+    </div>
+    <div class="item">
+        <p>Site Creator Access (100 coins)</p>
+        <button onclick="buy('creator')">Buy</button>
+    </div>
     <a href="hamsters.html" style="color:white;">Return to safety</a>
-</div>
+
+    <script>
+        document.getElementById('_coins').innerText = getVaultData().coins;
+        function buy(item) {
+            let c = getVaultData().coins;
+            let cost = item === 'filter' ? 20 : 100;
+            if (c >= cost) {
+                localStorage.setItem('_c', (c - cost).toString());
+                if (item === 'creator') unlock('creator_access');
+                alert("Purchased " + item);
+                location.reload();
+            } else {
+                alert("Not enough coins!");
+            }
+        }
+    </script>
+</body>
+</html>
