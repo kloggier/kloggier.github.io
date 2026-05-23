@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Simple Web</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="transition-overlay"></div>
     <script>
         // Check for Hell Mode
         if (localStorage.getItem('hellMode') === 'active') {
@@ -30,6 +27,9 @@
             }
         }
     </script>
+</head>
+<body>
+    <div class="transition-overlay"></div>
     <header>
         <nav class="container">
             <div class="logo">Kloggier</div>
@@ -51,14 +51,26 @@
     <main>
         <section class="hero container">
             <div class="hero-content">
-                <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=500" alt="Cute Cat">
+                <div class="cube-container">
+                    <div class="cube">
+                        <div class="face front"></div>
+                        <div class="face back"></div>
+                        <div class="face right"></div>
+                        <div class="face left"></div>
+                        <div class="face top"></div>
+                        <div class="face bottom"></div>
+                    </div>
                 </div>
                 <h1>Modern Design, Simplified.</h1>
                 <p>Welcome to my clean and simple personal space on the web. Built with focus on clarity and user experience.</p>
                 <a href="hamsters.html" class="btn">Explore My Work</a>
             </div>
         </section>
+        
+        <div id="contactModal" class="modal">
+            <p>Coming Soon</p>
+            <button onclick="hideModal()">Close</button>
+        </div>
 
         <section id="about" class="about container">
             <h2>About Me</h2>
@@ -85,8 +97,14 @@
         </div>
     </footer>
 
-    <script src="achievements.js"></script>
     <script>
+        function showModal() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+        function hideModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+        
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
@@ -104,7 +122,6 @@
         updateToggleUI();
 
         themeToggle.addEventListener('click', () => {
-            unlock('theme_flip');
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('theme', 'dark');
@@ -114,8 +131,5 @@
             updateToggleUI();
         });
     </script>
-    <script src="dvd.js"></script>
-    <script src="music.js"></script>
-    <script src="hacker.js"></script>
 </body>
 </html>
